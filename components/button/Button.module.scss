@@ -1,0 +1,25 @@
+.button {
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0px -3px 0px 0px rgba(0, 0, 0, 0.25) inset, 0px 16px 48px 0px rgba(255, 255, 255, 0.24);
+    padding: 20px 14px;
+
+    color: #000;
+    font-family: 'PT_Root_UI', sans-serif;
+    font-size: 34px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 42px;
+    letter-spacing: -0.34px;
+    transition: box-shadow .1s linear, transform .1s linear;
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0px -4px 0px 0px rgba(0, 0, 0, 0.25) inset, 0px 16px 48px 0px rgba(255, 255, 255, 0.24);
+    } 
+
+    &:active {
+        transform: translateY(1px);
+        box-shadow: 0px 4px 0px 0px rgba(0, 0, 0, 0.25) inset, 0px 16px 48px 0px rgba(255, 255, 255, 0.24);
+    }
+}

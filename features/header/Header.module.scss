@@ -1,0 +1,122 @@
+.block {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: 100%;
+    padding-top: 26px;
+    padding-bottom: 26px;
+}
+
+.wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    & > span:not(.logo_icon) {
+        margin-top: 5px;
+    }
+}
+
+button.sound {
+    width: 44px;
+    height: 40px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    padding: 0;
+    overflow: hidden;
+
+    svg {
+        width: 24px;
+        min-width: 24px;
+        height: 24px;
+        min-height: 24px;
+    }
+
+    [data-selector="sound.on"] {
+        margin: 10px 0;
+        transform: translateY(20px);
+    }
+
+    [data-selector="sound.off"] {
+        margin: 10px 0;
+        transform: translateY(0);
+    }
+
+    span {
+        width: 24px;
+        max-width: 24px;
+        height: 24px;
+        max-height: 24px;
+        overflow: hidden;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+.logo_icon {
+    width: 44px;
+    min-width: 44px;
+    height: 40px;
+    min-height: 40px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    transition: box-shadow .1s linear, transform .1s linear;
+
+    svg {
+        width: 32px;
+        min-width: 32px;
+        height: 32px;
+        transform: translateX(50px);
+    }
+
+    &.is_active {
+        box-shadow: 0px -3px 0px 0px rgba(0, 0, 0, 0.25) inset, 0px 16px 48px 0px rgba(255, 255, 255, 0.24);
+    }
+}
+
+.logo_arrow {
+    transform: translateX(50px);
+    width: 44px;
+    min-width: 44px;
+    height: 40px;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0px -3px 0px 0px rgba(0, 0, 0, 0.25) inset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: box-shadow .1s linear, transform .1s linear;
+
+    svg {
+        width: 24px;
+        min-width: 24px;
+        height: 24px;
+        transform: translate(0, -2px);
+    }
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0px -4px 0px 0px rgba(0, 0, 0, 0.25) inset;
+    }
+
+    &:active {
+        transform: translateY(1px);
+        box-shadow: 0px 4px 0px 0px rgba(0, 0, 0, 0.25) inset;
+    }
+}
+
