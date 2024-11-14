@@ -14,11 +14,11 @@ const useGame = () => {
                 chooseHero && setIsStart(true);
             }
         };
-        document.addEventListener('pointerdown', callBack, false);
-        document.addEventListener('keydown', callBack, false);
+        document?.addEventListener('pointerdown', callBack, false);
+        document?.addEventListener('keydown', callBack, false);
         return () => {
-            document.removeEventListener('pointerdown', callBack, false);
-            document.removeEventListener('keydown', callBack, false);
+            document?.removeEventListener('pointerdown', callBack, false);
+            document?.removeEventListener('keydown', callBack, false);
         };
     }, [chooseHero]);
 

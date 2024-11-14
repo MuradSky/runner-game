@@ -96,6 +96,7 @@ const useHeader = () => {
     return {
         onClick,
         root,
+        toggle,
         onToggle
     };
 };

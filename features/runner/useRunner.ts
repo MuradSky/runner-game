@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import lottie, { AnimationItem } from 'lottie-web';
+import { AnimationItem, LottiePlayer } from 'lottie-web';
 
 interface Props {
     isStart: boolean;
@@ -18,7 +18,8 @@ import romJump from 'assets/personal/rom/rom_jump.json';
 
 import annFall from 'assets/personal/ann/ann_fall.json';
 import annRun from 'assets/personal/ann/ann_run.json';
-import annJump from 'assets/personal/ann/ann_jump.json';
+import annJump from 'assets/personal/ann/anna_jump.json';
+
 import useStore from 'store';
 
 type Anim = {
@@ -50,6 +51,13 @@ const useRunner = ({ isStart }: Props) => {
     const root = useRef<HTMLDivElement | null>(null);
     const [started, setStarted] = useState(false);
     const currentAnimation = useRef<AnimationItem | null>(null);
+    const lottie = useRef<LottiePlayer | null>(null);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            lottie.current = require('lottie-web');
+        }
+    }, []);
 
     useEffect(() => {
         const timeOut = setTimeout(() => {
@@ -67,8 +75,9 @@ const useRunner = ({ isStart }: Props) => {
                 currentAnimation.current.destroy();
             }
 
-            if (person) {
-                currentAnimation.current = lottie.loadAnimation({
+
+            if (person && lottie.current) {
+                currentAnimation.current = lottie.current?.loadAnimation({
                     container: person,
                     renderer: 'svg',
                     loop: true,
@@ -122,14 +131,16 @@ const useRunner = ({ isStart }: Props) => {
             }
         };
         
-        window.addEventListener('keydown', onJumping);
-        window.addEventListener('pointerdown', onJumping);
+        window?.addEventListener('keydown', onJumping);
+        window?.addEventListener('pointerdown', onJumping);
         return () => {
-            window.removeEventListener('pointerdown', onJumping);
+            if (currentAnimation.current) currentAnimation.current.destroy();
+            window?.removeEventListener('pointerdown', onJumping);
+            window?.removeEventListener('keydown', onJumping);
         };
     }, {
         scope: root,
-        dependencies: [started, chooseHero, isStart],
+        dependencies: [started, chooseHero, isStart, lottie],
     });
     
     useGSAP(() => {

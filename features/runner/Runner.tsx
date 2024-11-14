@@ -1,3 +1,4 @@
+'use client';
 import { memo } from 'react';
 import { classNames } from 'utils';
 
@@ -19,7 +20,6 @@ const Runner = ({ isClear, isStart }: RunnerProps) => {
                     <img src="/images/ribbon.webp" alt="" data-selector="game.bg" />
                 </picture>
             </div>
-
             <div className={classNames(styles.person, !isClear && styles.default)} data-selector="game.person" />
         </div>
     );
