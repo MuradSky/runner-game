@@ -48,10 +48,14 @@ const Hero = () => {
                     </div>
 
                     <div className={styles.main_bg}>
-                        <img
-                            src="/images/main-1.webp"
-                            alt=''
-                        />
+                        <picture>
+                            <source media="(max-width: 768px)" srcSet="/images/main-m.png" />
+                            <source media="(max-width: 1024px) and (min-height: 1024px)" srcSet="/images/main-m.png" />
+                            <img
+                                src="/images/main-1.webp"
+                                alt=''
+                            />
+                        </picture>
                     </div>
                 </SwiperSlide>
                 <SwiperSlide className={styles.item}>

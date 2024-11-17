@@ -83,6 +83,7 @@ const useHeader = () => {
     useGSAP(() => {
         if (root.current) {
             if (toggle) {
+
                 gsap.to('[data-selector="sound.on"]', .3, {
                     y: -24,
                 });
@@ -90,12 +91,13 @@ const useHeader = () => {
                     y: -24,
                 });
             } else {
+                gsap.to('[data-selector="sound.off"]', .3, {
+                    y:20,
+                });
                 gsap.to('[data-selector="sound.on"]', .3, {
                     y: 20,
                 });
-                gsap.to('[data-selector="sound.off"]', .3, {
-                    y: 0,
-                });
+               
             }
         }
     }, {
@@ -106,6 +108,9 @@ const useHeader = () => {
     useGSAP(() => {
         if (root.current) {
             if (isOpenPreview) {
+                gsap.to('[data-action="logo"]', .3, {
+                    x: 0,
+                });
                 gsap.to('[data-selector="logo.icon"]', {
                     // x: -20,
                     scale: .5,
@@ -117,6 +122,9 @@ const useHeader = () => {
                     x: -32,
                 });
             } else {
+                gsap.to('[data-action="logo"]', .3, {
+                    x: -12,
+                });
                 gsap.to('[data-selector="logo.arrow"]', {
                     x: 15,
                     scale: .5,

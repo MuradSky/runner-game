@@ -28,8 +28,6 @@ const usePoints = () => {
         scope: root,
     });
 
-
-
     useGSAP(() => {
         const addCoin = root.current?.querySelector('[data-selector="coin.add"]') as HTMLDivElement;
         const point1 = root.current?.querySelector('[data-selector="point.1"]') as HTMLDivElement;
@@ -42,6 +40,8 @@ const usePoints = () => {
 
             animate.goToAndPlay(0, true); 
             gsap.to(addCoin, {
+                scale: 2,
+                opacity: 1,
                 duration: 1,
                 delay: .1,
                 ease: 'elastic.out(1, 0.3)'
@@ -52,6 +52,7 @@ const usePoints = () => {
                 y: (pointRect.y + pointRect.height) - window.innerHeight,
                 x: (pointRect.x + pointRect.width) - window.innerWidth,
                 duration: 1,
+                scale: 1,
                 onComplete() {
                     ((coins < 2 ? point1 : (coins > 1 && coins < 3) ? point2 : point3) as HTMLDivElement)
                         .classList.add(styles.is_active);
@@ -61,6 +62,8 @@ const usePoints = () => {
                     }, 100);
                     animate.goToAndStop(0, true);
                     gsap.set(addCoin, {
+                        opacity: 0,
+                        scale: 1,
                         y: -120,
                         x: '-20vw',
                     });

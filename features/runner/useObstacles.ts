@@ -2,6 +2,7 @@ import { RefObject, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { AnimationItem, LottiePlayer } from 'lottie-web';
+import { useScreenSize } from 'hooks';
 
 import pappersJson from 'assets/obj/paper.json';
 
@@ -16,6 +17,7 @@ const useObstacles = ({
     root,
     setIsFails
 }: Props) => {
+    const { isMobile } = useScreenSize();
     const obstacles = useRef<GSAPTimeline>(gsap.timeline());
     const [currentObstacle, setObstacle] = useState(0);
     useGSAP(() => {
@@ -36,8 +38,8 @@ const useObstacles = ({
 
             const svg = pappers?.querySelector('svg');
             if (svg) {
-                svg.setAttribute('width', '320px');
-                svg.setAttribute('height', '200px');
+                svg.setAttribute('width', isMobile ? '170px' : '300px');
+                svg.setAttribute('height', isMobile ? '100px' : '200px');
             }
             return papper;
         };
@@ -55,30 +57,31 @@ const useObstacles = ({
                 );
             };
 
-            obstacles.current.to('[data-action="obstacles.item"]', {
-                x: -(window.innerWidth + 100),
-                duration: 4,
-                delay: 1,
-                onUpdate() {
-                    const obj2 = person?.querySelector('g');
-                    if (obj && obj2) {
-                        const objRect = obj.getBoundingClientRect();
-                        const personRect = obj2.getBoundingClientRect();
-                        if (checkCollision(personRect, objRect) && person) {
-                            setIsFails(true);
-                        }
-                    }
-                },
-                onComplete() {
-                    setTimeout(() => {
-                        animate = animatePapers();
-                    }, 200);
-                    if (count === 4) count = 0;
-                    else count++;
-                    setObstacle(count);
-                    obstacles.current.restart();
-                }
-            });
+            // obstacles.current.to('[data-action="obstacles.item"]', {
+            //     x: -(window.innerWidth + 100),
+            //     duration: isMobile ? 3.5 : 5,
+
+
+            //     onUpdate() {
+            //         const obj2 = person?.querySelector('g');
+            //         if (obj && obj2) {
+            //             const objRect = obj.getBoundingClientRect();
+            //             const personRect = obj2.getBoundingClientRect();
+            //             if (checkCollision(personRect, objRect) && person) {
+            //                 setIsFails(true);
+            //             }
+            //         }
+            //     },
+            //     onComplete() {
+            //         setTimeout(() => {
+            //             animate = animatePapers();
+            //         }, 200);
+            //         if (count === 4) count = 0;
+            //         else count++;
+            //         setObstacle(count);
+            //         obstacles.current.restart();
+            //     }
+            // });
         }
 
         return () => {

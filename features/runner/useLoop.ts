@@ -12,25 +12,34 @@ const useLoop = ({
     started,
     root,
 }: Props) => {
-    const loop = useRef<GSAPTimeline>(gsap.timeline());
+    const loop1 = useRef<GSAPTimeline>(gsap.timeline());
+    const loop2 = useRef<GSAPTimeline>(gsap.timeline());
 
     useGSAP(() => {
         const rect = root.current?.querySelector('[data-selector="game.bg"]')?.getBoundingClientRect();
-        
         if (root.current) {
             if (started) {
-                loop.current.to('[data-selector="game.bg"]', {
+                loop1.current.to('[data-selector="game.bg"]', {
                     x: rect ? -rect.width : 0, 
                     duration: 8,
                     ease: 'linear',
                     repeat: -1,
                 });
-                loop.current.play();
+                loop1.current.play();
+
+                loop2.current.to('[data-selector="obstacles"]', {
+                    x: -8000, 
+                    duration: 18.5,
+                    ease: 'linear',
+                    repeat: -1,
+                });
+                loop2.current.play();
             }
         }
 
         return () => {
-            loop.current.kill();
+            loop1.current.kill();
+            loop2.current.kill();
         };
     }, {
         scope: root,
@@ -38,7 +47,8 @@ const useLoop = ({
     });
 
     return {
-        loop
+        loop1,
+        loop2,
     };
 };
 

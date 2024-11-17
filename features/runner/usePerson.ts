@@ -2,6 +2,7 @@ import { RefObject, useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { AnimationItem, LottiePlayer } from 'lottie-web';
+import { useScreenSize } from 'hooks';
 
 import maxFall from 'assets/personal/max/max_fall.json';
 import maxRun from 'assets/personal/max/max_run.json';
@@ -54,6 +55,7 @@ const usePerson = ({
     chooseHero,
     isFail,
 }: Props) => {
+    const { isMobile } = useScreenSize();
     const lottie = useRef<LottiePlayer | null>(null);
     const animation = useRef<AnimationItem | null>(null);
     const personTl = useRef<GSAPTimeline>(gsap.timeline());
@@ -86,12 +88,12 @@ const usePerson = ({
                 if (person) {
                     loadAnimate('jump', person);
                     personTl.current.to(person, {
-                        y: -400,
+                        y: isMobile ? -240 : -400,
                         duration: .5,
                         onComplete() {
                             gsap.to(person, {
                                 x: 0,
-                                duration: 1,
+                                duration: isMobile ? 1.5 : 1,
                                 delay: .3,
                             });
                         }
@@ -109,7 +111,7 @@ const usePerson = ({
                         }
                     });
                     gsap.to(person, {
-                        x: 250,
+                        x: isMobile ? 200 : 250,
                         duration: .5,
                         delay: .3,
                     });

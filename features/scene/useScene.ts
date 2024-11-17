@@ -3,13 +3,14 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import useStore from 'store';
 import { AnimationItem, LottiePlayer } from 'lottie-web';
-
+import { useScreenSize } from 'hooks';
 import maksIdle from 'assets/personal/max/max_idle.json';
 import maksSelect from 'assets/personal/max/max_select.json';
 import romIdle from 'assets/personal/rom/rom_idle.json';
 import romSelect from 'assets/personal/rom/rum_select.json';
 import annIdle from 'assets/personal/ann/ann_idle.json';
 import annSelect from 'assets/personal/ann/ann_select.json';
+import { SwiperClass } from 'swiper/react';
 
 interface Data {
     [key: string]: {
@@ -37,9 +38,11 @@ interface Animate {
 }
 
 const useScene = () => {
+    const { isMobile } = useScreenSize();
     const root = useRef<HTMLDivElement | null>(null);
     const [currentHero, setHero] = useState<null | string>(null);
     const [lottie, setLottie] = useState<LottiePlayer | null>(null);
+    const [swiper, setSwiper] = useState<SwiperClass | null>(null);
     const [animate, setAnimate] = useState<Animate>({
         maks: null,
         rom: null,
@@ -181,7 +184,7 @@ const useScene = () => {
                 container: root,
                 renderer: 'svg',
                 loop: isLoop,
-                autoplay,
+                autoplay: isMobile ? true : autoplay,
                 animationData: data[hero][type],
             });
             setAnimate(state => ({
@@ -204,6 +207,21 @@ const useScene = () => {
         setHero(hero);
     };
 
+    const choosePersonMobile = () => {
+        const item = root.current?.querySelector('.swiper-slide-active>[data-person]') as HTMLDivElement;
+        if (currentHero) return;
+        const hero = item.dataset.person as string;        
+        if (animate[hero]) {
+            animate[hero].destroy();
+            setAnimate(state => ({
+                ...state,
+                [hero]: null,
+            }));
+        }
+        setHero(hero);
+    };
+
+
     const onMouseEnter = (e: MouseEvent) => {
         if (currentHero) return;
         const hero = (e.currentTarget as HTMLDivElement).dataset.person as string;
@@ -221,12 +239,29 @@ const useScene = () => {
         }
     };
 
+    const onPrev = () => {
+        if (swiper) {
+            swiper.slidePrev();
+        }
+    };
+
+    const onNext = () => {
+        if (swiper) {
+            swiper.slideNext();
+        }
+    };
+
+
     return {
         root,
         hero: currentHero,
         choosePerson,
         onMouseEnter,
-        onMouseLeave
+        onMouseLeave,
+        choosePersonMobile,
+        setSwiper,
+        onPrev,
+        onNext
     };
 };
 

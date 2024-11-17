@@ -8,7 +8,6 @@ interface Props {
     isStart: boolean;
 }
 
-
 const useRunner = ({ isStart }: Props) => {
     const { chooseHero, addCoin, isGamePaused, addIsFinish, addIsGameOver } = useStore(state => state);
     const root = useRef<HTMLDivElement | null>(null);
@@ -17,7 +16,7 @@ const useRunner = ({ isStart }: Props) => {
     const [round, setRound] = useState(0);
 
     const { obstacles, currentObstacle } = useObstacles({ started, root, setIsFails });
-    const { loop } = useLoop({ started, root });
+    const { loop1, loop2 } = useLoop({ started, root });
     const { animation, lottie, loadAnimate } = usePerson({ root, started, chooseHero, isFail, });
 
     useEffect(() => {
@@ -87,7 +86,8 @@ const useRunner = ({ isStart }: Props) => {
             animation.current.isPaused = false;
         }
 
-        loop.current.play();
+        loop1.current.play();
+        loop2.current.play();
         obstacles.current.play();
     };
 
@@ -95,13 +95,15 @@ const useRunner = ({ isStart }: Props) => {
         if (animation.current) {
             animation.current.isPaused = true;
         }
-        loop.current.pause();
+        loop1.current.pause();
+        loop2.current.pause();
         obstacles.current.pause();
     };
 
     const gameOver = () => {
         const person = root.current?.querySelector<HTMLDivElement>('[data-selector="game.person"]');
-        loop.current.pause();
+        loop1.current.pause();
+        loop2.current.pause();
         obstacles.current.pause();
 
         if (animation.current && person) {

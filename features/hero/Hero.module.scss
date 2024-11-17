@@ -21,6 +21,12 @@
     text-align: center;
     color: #fff;
     padding-top: 90px;
+
+    @media (max-width: 500px) {
+        text-align: left;
+        padding: 75px 15px 0;
+    }
+
     h1 {
         font-family: '5by7', sans-serif;
         font-size: 72px;
@@ -30,13 +36,27 @@
         letter-spacing: 2.88px;
         text-transform: uppercase;
         margin-bottom: 24px;
-       
+        
+        @media (max-width: 1366px) {
+            font-size: 54px;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 1024px) {
+            font-size: 38px;
+            margin-bottom: 12px;
+        }
     }
 
     .text {
         max-width: 580px;
         margin: 0 auto;
         margin-bottom: 32px;
+    
+        @media (max-width: 500px) {
+            text-align: left;
+            margin-bottom: 24px;
+        }
     }
 
     &:not(.static) {
@@ -54,6 +74,10 @@
         width: 100%;
         max-width: 270px;
         margin: 0 auto;
+
+        @media (max-width: 500px) {
+            max-width: 100%;
+        }
     }
 }
 
@@ -63,5 +87,13 @@
         height: initial;
         min-height: 100vh;
         object-fit: cover;
+
+        @media (max-width: 1024px) and (min-height: 1024px) {
+            object-position: 0 -250px;
+        }
+
+        @media (max-width: 768px) {
+            object-position: center bottom;
+        }
     }
 }

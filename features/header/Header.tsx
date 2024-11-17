@@ -21,7 +21,6 @@ const Header = () => {
         toggle,
         onToggle,
         isFinish,
-        onReset
     } = useHeader();
 
     if (isFinish) {
@@ -30,13 +29,12 @@ const Header = () => {
                 <div className={classNames(styles.wrap, styles.second, 'container')}>
                     <a href="/"
                         className={styles.reset}
-                        onClick={onReset}
                     >
                         <Reload />
                     </a>
                     <div className={styles.logo}>
                         <LogoIcon/>
-                        <span><Logo /></span>
+                        <span className={styles.ut}><Logo /></span>
                     </div>
                     <Button cssClass={styles.sound} onClick={onToggle}>
                         <span>
@@ -52,14 +50,14 @@ const Header = () => {
     return (
         <header ref={root} className={styles.block}>
             <div className={classNames(styles.wrap, 'container')}>
-                <button className={styles.logo} onClick={onClick}>
+                <button className={styles.logo} onClick={onClick} data-action="logo">
                     <span className={classNames(styles.logo_icon, toggle && styles.is_active)}>
                         <LogoIcon data-selector="logo.icon" />
                         <span className={styles.logo_arrow} data-selector="logo.arrow">
                             <Arrow />
                         </span>
                     </span>
-                    <span><Logo /></span>
+                    <span className={styles.ut}><Logo /></span>
                 </button>
                 <Button cssClass={styles.sound} onClick={onToggle}>
                     <span>

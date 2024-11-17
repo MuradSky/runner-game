@@ -22,8 +22,7 @@
         height: 500px;
         filter: blur(50px);
         background: radial-gradient(84.38% 76.5% at 52.36% 0%, #FFF 2.05%, #73D6BC 15.17%, #2AC242 40%, #075C48 52%, #1A1A1A 97.92%);
-    }
-
+    }    
 }
 
 .wrap {
@@ -37,9 +36,14 @@
     padding: 32px;
     position: relative;
     z-index: 20;
+
+    @media (max-width: 768px) {
+        padding: 15px;
+    }
 }
 
 .content {
+    width: 100%;
     max-width: 597px;
 }
 
@@ -53,6 +57,16 @@
     /* 70.4px */
     letter-spacing: 1.28px;
     text-transform: uppercase;
+
+    @media (max-width: 1366px) {
+        font-size: 54px;
+        margin-bottom: 16px;
+    }
+
+    @media (max-width: 1024px) {
+        font-size: 38px;
+        margin-bottom: 8px;
+    }
 }
 
 .alert {
@@ -62,6 +76,11 @@
     backdrop-filter: blur(50px);
     padding: 32px 48px;
 
+    @media (max-width: 768px) {
+        border-radius: 20px;
+        padding: 24px 15px;
+    }
+
     span {
         text-align: center;
         font-size: 18px;
@@ -70,6 +89,10 @@
         letter-spacing: -0.18px;
         opacity: 0.5;
         margin-bottom: 12px;
+        @media (max-width: 768px) {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
     }
 
     p {
@@ -78,6 +101,10 @@
         font-weight: 500;
         line-height: 120%;
         letter-spacing: -0.32px;
+
+        @media (max-width: 768px) {
+            font-size: 16px;
+        }
     }
 }
 
@@ -87,6 +114,10 @@
     line-height: 135%;
     opacity: 0.5;
     margin: 12px 0 45px;
+
+    @media (max-width: 768px) {
+        font-size: 16px;
+    }
 }
 
 .coins {
@@ -143,6 +174,10 @@
         line-height: 135%;
         letter-spacing: -0.18px;
         margin-top: 10px;
+
+        @media (max-width: 768px) {
+            font-size: 16px;
+        }
     }
 }
 
@@ -158,6 +193,13 @@ button.regist {
 
     span {
         color: #AFFD9F;
+    }
+
+    @media (max-width: 768px) {
+        font-size: 16px;
+        padding: 30px;
+        font-weight: 500;
+        border-radius: 20px;
     }
 }
 .ribbon {
@@ -198,4 +240,9 @@ button.regist {
     transform: translateX(-50%);
     max-width: 700px;
     z-index: -1;
+
+    @media (max-width: 768px) {
+        max-width: 100%;
+        width: 100%;
+    }
 }

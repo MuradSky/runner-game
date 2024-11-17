@@ -24,6 +24,9 @@
     display: flex;
     align-items: flex-start;
     justify-content: center;
+
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 
@@ -35,6 +38,12 @@
     max-width: 375px;
     padding: 24px;
     min-height: 400px;
+
+    @media (max-width: 768px) {
+        border-radius: 0;
+        height: 100%;
+        padding: 24px 15px;
+    }
 }
 
 .title {
@@ -64,6 +73,10 @@
     display: flex;
     gap: 10px;
 
+    @media (max-width: 768px) {
+        margin: 16px 0;
+    }
+
     svg {
         width: 24px;
         min-width: 24px;
@@ -78,6 +91,10 @@
     line-height: 140%;
     margin-bottom: 20px;
     text-align: left;
+
+    @media (max-width: 768px) {
+        margin-bottom: 16px;
+    }
 }
 
 button.button {
@@ -92,6 +109,10 @@ button.button {
 
     display: flex;
     justify-content: center;
+
+    @media (max-width: 768px) {
+        padding: 16px 0 40px;
+    }
 
     svg {
         position: relative;
@@ -110,6 +131,12 @@ button.button {
         filter: blur(26.53059959411621px);
         border-radius: 100%;
         opacity: .9;
+
+        @media (max-width: 768px) {
+            top: -60px;
+            width: 500px;
+            height: 240px;
+        }
     }
 
 
