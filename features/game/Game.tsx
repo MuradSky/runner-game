@@ -1,20 +1,28 @@
 import { memo } from 'react';
+
+import Text from 'components/text';
+import Runner from 'features/runner';
 import useGame from './useGame';
+import { classNames } from 'utils';
 
 import Click from 'assets/svg/click.svg';
 import Space from 'assets/svg/space.svg';
 import Up from 'assets/svg/up.svg';
-
 import styles from './Game.module.scss';
-import Text from 'components/text';
-import Runner from 'features/runner';
 
 const Game = () => {
     const { root, isClear, isStart } = useGame();
     return (
         <div className={styles.block} ref={root}>
-            <Runner isClear={isClear} isStart={isStart} />
-
+            {isStart && <Runner isClear={isClear} isStart={isStart} />}
+            {!isStart &&
+                <div className={classNames(styles.ribbon, !isClear && styles.default)}>
+                    <picture>
+                        <img src="/images/ribbon.webp" alt="" data-selector="game.bg" />
+                        <img src="/images/ribbon.webp" alt="" data-selector="game.bg" />
+                    </picture>
+                </div>
+            }
             <div
                 className={styles.preview}
                 data-seletor="game.preview"

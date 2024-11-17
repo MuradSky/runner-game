@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     description: 'Start',
 };
 
-export const revalidate = 5;
+export const revalidate = 0;
 
 export default async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
     return (

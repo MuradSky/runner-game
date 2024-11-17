@@ -13,7 +13,7 @@ const data = [
 ];
 
 const Scene = () => {
-    const { choosePerson, hero, root } = useScene();
+    const { choosePerson, hero, root, onMouseEnter, onMouseLeave } = useScene();
     return (
         <div className={styles.block} ref={root}>
             <div className={styles.content}>
@@ -27,23 +27,27 @@ const Scene = () => {
                 </div>
 
                 <div className={styles.heros}>
-                    
                     {data.map(item => (
                         <div
                             key={item.id}
                             className={
                                 classNames(
                                     styles.hero,  
-                                    (hero === item.person ) ? styles.is_show : hero && styles.is_hidden
+                                    (hero === item.person) ? styles.is_show : hero && styles.is_hidden
                                 )
                             }
                             data-person={item.person}
                             role='presentation'
-                            onClick={choosePerson(item.person)}
+                            onClick={choosePerson}
+                            onMouseEnter={onMouseEnter}
+                            onMouseLeave={onMouseLeave}
                         >
-                            <picture>
-                                <img src={`/parson-static/${item.person}.webp`} alt="" />
-                            </picture>
+                            <div className={styles.person}>
+                                <picture>
+                                    <img src={`/parson-static/${item.person}.webp`} alt="" />
+                                </picture>
+                                <div className={styles.person_anim} data-action="person.anim" />
+                            </div>
 
                             <div className={styles.hero_info}>
                                 <div className={styles.hero_name}>{item.name}</div>

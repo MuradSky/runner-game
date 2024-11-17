@@ -9,7 +9,7 @@ const useHero = () => {
     const { addOpenPreview, isOpenPreview, addBack, chooseHero } = useStore(state => state);
     const [swiper, setSwiper] = useState<SwiperClass | null>(null);
     const [isPreview, setIsPreview] = useState(false);
-
+    
     useEffect(() => {
         const timeOut = setTimeout(() => {
             clearTimeout(timeOut);
@@ -17,8 +17,6 @@ const useHero = () => {
         }, 300);
         return () => clearTimeout(timeOut);
     }, [isOpenPreview]);
-
-    console.log(isPreview);
 
     useGSAP(() => {
         const tl = gsap.timeline();
@@ -68,7 +66,6 @@ const useHero = () => {
             swiper.slideTo(2);
         }
     }, [chooseHero]);
-
 
     const onNext = () => {
         setIsPreview(true);

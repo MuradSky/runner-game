@@ -1,167 +1,122 @@
 import { useEffect, useRef, useState } from 'react';
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
-import { AnimationItem, LottiePlayer } from 'lottie-web';
+import useStore from 'store';
+import useObstacles from './useObstacles';
+import useLoop from './useLoop';
+import usePerson from './usePerson';
 
 interface Props {
     isStart: boolean;
 }
 
-import maxFall from 'assets/personal/max/max_fall.json';
-import maxRun from 'assets/personal/max/max_run.json';
-import maxJump from 'assets/personal/max/max_jump.json';
-
-import romFall from 'assets/personal/rom/rom_fall.json';
-import romRun from 'assets/personal/rom/rom_run.json';
-import romJump from 'assets/personal/rom/rom_jump.json';
-
-
-import annFall from 'assets/personal/ann/ann_fall.json';
-import annRun from 'assets/personal/ann/ann_run.json';
-import annJump from 'assets/personal/ann/anna_jump.json';
-
-import useStore from 'store';
-
-type Anim = {
-    [key: string]: {
-        [key: string]: unknown;
-    };
-}
-
-const animations: Anim = {
-    maks: {
-        fall: maxFall,
-        run: maxRun,
-        jump: maxJump,
-    },
-    rom: {
-        fall: romFall,
-        run: romRun,
-        jump: romJump,
-    },
-    ann: {
-        fall: annFall,
-        run: annRun,
-        jump: annJump,
-    }
-};
 
 const useRunner = ({ isStart }: Props) => {
-    const { chooseHero } = useStore(state => state);
+    const { chooseHero, addCoin, isGamePaused, addIsFinish, addIsGameOver } = useStore(state => state);
     const root = useRef<HTMLDivElement | null>(null);
+    const [isFail, setIsFails] = useState(false);
     const [started, setStarted] = useState(false);
-    const currentAnimation = useRef<AnimationItem | null>(null);
-    const lottie = useRef<LottiePlayer | null>(null);
+    const [round, setRound] = useState(0);
+
+    const { obstacles, currentObstacle } = useObstacles({ started, root, setIsFails });
+    const { loop } = useLoop({ started, root });
+    const { animation, lottie, loadAnimate } = usePerson({ root, started, chooseHero, isFail, });
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
             lottie.current = require('lottie-web');
         }
+        return () => {
+            if (lottie.current) {
+                lottie.current.destroy();
+            }
+        };
     }, []);
 
     useEffect(() => {
         const timeOut = setTimeout(() => {
-            setStarted(isStart);
+            if (isStart) setStarted(isStart);
         }, 1000);
         return () => clearTimeout(timeOut);
     }, [isStart]);
 
-    useGSAP(() => {
-        const person = root.current?.querySelector('[data-selector="game.person"]');
-        let isJump = false;
+    useEffect(() => {
+        if (isFail) {
+            const timeOut = setTimeout(() => {
+                addIsFinish();
+                addIsGameOver();
+            }, 1000);
+            return () => clearTimeout(timeOut);
+        }
+        if (round === 3) addIsFinish();
+    }, [round, isFail]);
 
-        const loadAnimate = (key: string) => {
-            if (currentAnimation.current) {
-                currentAnimation.current.destroy();
-            }
+    useEffect(() => {
+        if (isGamePaused) pause();
+        else play();
+    }, [isGamePaused]);
 
+    useEffect(() => {
+        if (isFail) {
+            setStarted(false);
+            gameOver();
+        }
+        // else play();
+    }, [isFail]);
 
-            if (person && lottie.current) {
-                currentAnimation.current = lottie.current?.loadAnimation({
-                    container: person,
-                    renderer: 'svg',
-                    loop: true,
-                    autoplay: started,
-                    animationData: chooseHero && animations[chooseHero][key],
-                });
-            }
-        };
-
-        if (chooseHero) {
-            loadAnimate('run');
+    useEffect(() => {
+        let timeOut: NodeJS.Timeout | null = null;
+        if (animation.current?.isPaused && timeOut) {
+            clearTimeout(timeOut);
         }
 
-        const onJumping = (e: KeyboardEvent | PointerEvent) => {
-            if (isJump || !started) return;
-            if (((e as KeyboardEvent).keyCode === 32 || (e as KeyboardEvent).keyCode === 38 || (e as PointerEvent).type === 'pointerdown') && started) {
-                isJump = true;
-                e.preventDefault();
-                loadAnimate('jump');
-                if (person) {
-                    gsap.to(person, {
-                        y: -380,
-                        duration: .5,
-                        onComplete() {
-                            const timeOut = setTimeout(() => {
-                                clearTimeout(timeOut);
-                                loadAnimate('run');
-                            }, 400);
-                            gsap.to(person, {
-                                y: 0,
-                                duration: .5,   
-                            });
+        if (started && !animation.current?.isPaused) {
+            timeOut = setTimeout(() => {
+                setRound(round + 1);
+                addCoin();
+            }, 8000);
+        }
 
-                            gsap.to(person, {
-                                x: 0,
-                                duration: .5,
-                                delay: .25,
-                                onComplete() {
-                                    isJump = false;
-                                }
-                            });
-                        }
-                    });
-
-                    gsap.to(person, {
-                        x: 200,
-                        duration: .5,
-                        delay: .3,
-                    });
-                }
-            }
-        };
-        
-        window?.addEventListener('keydown', onJumping);
-        window?.addEventListener('pointerdown', onJumping);
         return () => {
-            if (currentAnimation.current) currentAnimation.current.destroy();
-            window?.removeEventListener('pointerdown', onJumping);
-            window?.removeEventListener('keydown', onJumping);
-        };
-    }, {
-        scope: root,
-        dependencies: [started, chooseHero, isStart, lottie],
-    });
-    
-    useGSAP(() => {
-        if (root.current) {
-            if (started) {
-                const rect = root.current?.querySelector('[data-selector="game.bg"]')?.getBoundingClientRect();
-                gsap.to('[data-selector="game.bg"]', {
-                    x: rect ? -rect.width : 0, 
-                    duration: 8,
-                    ease: 'linear',
-                    repeat: -1,
-                });
+            if (timeOut) {
+                clearTimeout(timeOut);
             }
+        };
+    }, [started, animation, round, isGamePaused]);
+
+    const play = () => {
+        if (animation.current) {
+            animation.current.isPaused = false;
         }
-    }, {
-        scope: root,
-        dependencies: [started],
-    });
+
+        loop.current.play();
+        obstacles.current.play();
+    };
+
+    const pause = () => {
+        if (animation.current) {
+            animation.current.isPaused = true;
+        }
+        loop.current.pause();
+        obstacles.current.pause();
+    };
+
+    const gameOver = () => {
+        const person = root.current?.querySelector<HTMLDivElement>('[data-selector="game.person"]');
+        loop.current.pause();
+        obstacles.current.pause();
+
+        if (animation.current && person) {
+            loadAnimate('fall', person);
+            const timer = setTimeout(() => {
+                if (animation.current) animation.current.isPaused = true;
+            }, 1000);
+            return () => clearTimeout(timer);
+        }
+    };
 
     return {
         root,
+        pause,
+        currentObstacle
     };
 };
 

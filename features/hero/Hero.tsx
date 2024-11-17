@@ -3,19 +3,26 @@ import { memo } from 'react';
 import { Swiper, SwiperSlide, SwiperClass } from 'swiper/react';
 import { EffectFade } from 'swiper/modules';
 
+import { classNames } from 'utils';
 import useHero from './useHero';
 import Scene from 'features/scene';
 import Game from 'features/game';
 import Button from 'components/button';
 import Text from 'components/text';
+import Winmodal from 'features/win-modal';
+import Result from 'features/result';
 
 import styles from './Hero.module.scss';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
-import { classNames } from 'utils';
 
 const Hero = () => {
-    const { setSwiper, onNext, root, isPreview } = useHero();
+    const {
+        setSwiper,
+        onNext,
+        root,
+        isPreview
+    } = useHero();
 
     return (
         <section className={styles.block}>
@@ -54,6 +61,9 @@ const Hero = () => {
                     <Game />
                 </SwiperSlide>
             </Swiper>
+
+            <Winmodal />
+            <Result />
         </section>
     );
 };

@@ -90,18 +90,45 @@
     }
 
     &.is_show {
+        picture {
+            opacity: 0;
+        }
+    
+        .person_anim {
+            opacity: 1;
+        }
         &::before {
             opacity: 1;
             transform: skewX(14deg) rotate(5deg) scale(10);
         }
     }
 
+
+
     &.is_hidden {
+        opacity: .1;
+    }
+
+    picture {
         opacity: 0;
+        transition: opacity .3s linear;
+    }
+
+    .person_anim {
+        opacity: 1;
+        transition: opacity .3s linear;
     }
 
     &:hover {
         &::before {
+            opacity: 1;
+        }
+
+        picture {
+            opacity: 0;
+        }
+
+        .person_anim {
             opacity: 1;
         }
     }
@@ -157,5 +184,31 @@
         font-weight: 500;
         line-height: 140%;
         margin-top: 20px;
+    }
+}
+
+.hero {
+    &:nth-child(2) {
+        .person_anim svg {
+            transform: scale(2.5) translate(-6px, -2px) !important;
+        }
+    }
+}
+
+.person {
+    position: relative;
+
+    .person_anim {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        height: 100%;
+        transform: translateX(-50%);
+   
+        svg {
+            transform: scale(2.4) translate(-3px, -2px) !important;
+        }
+
+        
     }
 }

@@ -1,17 +1,64 @@
+import { useEffect, useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useRef, useState } from 'react';
 import useStore from 'store';
+
 const useHeader = () => {
+    const {
+        isOpenPreview,
+        addBack,
+        chooseHero,
+        isOpenResult,
+        isGameOver,
+        addReset
+    } = useStore(state => state);
     const root = useRef<HTMLDivElement | null>(null);
-    const { isOpenPreview, addBack, chooseHero } = useStore(state => state);
     const [toggle, setToggle] = useState(false);
-    
+    const [isFinish, setIsFinish] = useState(false);
+
+    useEffect(() => {
+        if (isOpenResult || isGameOver) {
+            setIsFinish(true);
+        }
+    }, [isOpenResult, isGameOver]);
+
+    useGSAP(() => {
+        if (root.current && chooseHero) {
+            const timeOut = setTimeout(() => {
+                if (isFinish) {
+                    gsap.to(root.current, {
+                        y: 0,
+                        opacity: 1,
+                    });
+                } else {
+                    gsap.to(root.current, {
+                        y: -200,
+                        opacity: 1,
+                        onComplete() {
+                            setIsFinish(false);
+                        }
+                    });
+                }
+            }, 300);
+
+            return () => clearTimeout(timeOut);
+        }
+    }, {
+        scope: root,
+        dependencies: [isFinish, chooseHero]
+    });
+
     useGSAP(() => {
         if (chooseHero && root.current) {
             gsap.to(root.current, {
                 y: -200,
                 opacity: 0,
+                duration: 1,
+            });
+        } else {
+            gsap.to(root.current, {
+                y: 0,
+                opacity: 1,
             });
         }
     }, {
@@ -93,11 +140,17 @@ const useHeader = () => {
         setToggle(!toggle);
     };
 
+    const onReset = () => {
+        addReset();
+    };
+
     return {
         onClick,
         root,
-        toggle,
-        onToggle
+        toggle: isOpenPreview,
+        onToggle,
+        isFinish,
+        onReset
     };
 };
 

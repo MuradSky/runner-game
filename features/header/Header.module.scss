@@ -2,7 +2,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 100;
+    z-index: 2000;
     width: 100%;
     padding-top: 26px;
     padding-bottom: 26px;
@@ -75,7 +75,7 @@ button.sound {
     overflow: hidden;
     display: flex;
     align-items: center;
-    transition: box-shadow .1s linear, transform .1s linear;
+    transition: box-shadow .1s linear;
 
     svg {
         width: 32px;
@@ -85,6 +85,8 @@ button.sound {
     }
 
     &.is_active {
+        transition: box-shadow .1s linear 1s;
+        border-radius: 10px;
         box-shadow: 0px -3px 0px 0px rgba(0, 0, 0, 0.25) inset, 0px 16px 48px 0px rgba(255, 255, 255, 0.24);
     }
 }
@@ -120,3 +122,11 @@ button.sound {
     }
 }
 
+.reset {
+    width: 44px;
+    height: 44px;
+    transition: all .5s linear;
+    &:hover {
+        transform: rotate(360deg);
+    }
+}
