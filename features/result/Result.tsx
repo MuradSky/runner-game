@@ -8,7 +8,7 @@ import Button from 'components/button';
 import { classNames } from 'utils';
 
 const Result = () => {
-    const { root, hero, isWin, coins } = useResult();
+    const { root, hero, isWin, coins, openWin } = useResult();
     return (
         <>
             <div className={styles.block} ref={root}>    
@@ -38,7 +38,7 @@ const Result = () => {
                             styles['_'+coins]
                         )}
                         >
-                            <div className={styles.item}>
+                            <div className={styles.item} role="presentation" onClick={openWin(1)} >
                                 <i>
                                     <img
                                         src={
@@ -51,7 +51,7 @@ const Result = () => {
                                 </i>
                                 <span>{hero && data[hero][0]}</span>
                             </div>
-                            <div className={styles.item}>
+                            <div className={styles.item} role="presentation" onClick={openWin(2)}>
                                 <i>
                                     <img
                                         src={
@@ -64,7 +64,7 @@ const Result = () => {
                                 </i>
                                 <span>{hero && data[hero][1]}</span>
                             </div>
-                            <div className={styles.item}>
+                            <div className={styles.item} role="presentation" onClick={openWin(3)}>
                                 <i>
                                     <img
                                         src={

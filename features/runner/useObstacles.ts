@@ -5,6 +5,7 @@ import { AnimationItem, LottiePlayer } from 'lottie-web';
 import { useScreenSize } from 'hooks';
 
 import pappersJson from 'assets/obj/paper.json';
+import useStore from 'store';
 
 interface Props {
     started: boolean;
@@ -17,9 +18,11 @@ const useObstacles = ({
     root,
     setIsFails
 }: Props) => {
-    const { isMobile } = useScreenSize();
+    const { isGameFinish: isFinish, isGamePaused } = useStore(state => state);
+    const { isMobile, isLaptop } = useScreenSize();
     const obstacles = useRef<GSAPTimeline>(gsap.timeline());
     const [currentObstacle, setObstacle] = useState(0);
+
     useGSAP(() => {
         const lottie: LottiePlayer = require('lottie-web');
         const person = root.current?.querySelector('[data-selector="game.person"]');
@@ -38,16 +41,24 @@ const useObstacles = ({
 
             const svg = pappers?.querySelector('svg');
             if (svg) {
-                svg.setAttribute('width', isMobile ? '170px' : '300px');
-                svg.setAttribute('height', isMobile ? '100px' : '200px');
+                svg.setAttribute('width', isMobile ? '160px' : isLaptop ? '250px' : '270px');
+                svg.setAttribute('height', isMobile ? '110px' : isLaptop ? '150px' : '200px');
             }
             return papper;
         };
 
         let animate: AnimationItem | null = null;
 
-        if (root.current && started) {
+        if (isFinish) {
+            obstacles.current.pause();
+            const timer = setTimeout(() => {
+                if (animate) animate.destroy();
+                gsap.set(obj as HTMLElement, { display: 'none' });
+            }, 1000);
+            return () => clearTimeout(timer);
+        }
 
+        if (root.current && started) {
             const checkCollision = (rect1: ClientRect, rect2: ClientRect) => {
                 return (
                     rect1.left < rect2.right &&
@@ -57,31 +68,30 @@ const useObstacles = ({
                 );
             };
 
-            // obstacles.current.to('[data-action="obstacles.item"]', {
-            //     x: -(window.innerWidth + 100),
-            //     duration: isMobile ? 3.5 : 5,
-
-
-            //     onUpdate() {
-            //         const obj2 = person?.querySelector('g');
-            //         if (obj && obj2) {
-            //             const objRect = obj.getBoundingClientRect();
-            //             const personRect = obj2.getBoundingClientRect();
-            //             if (checkCollision(personRect, objRect) && person) {
-            //                 setIsFails(true);
-            //             }
-            //         }
-            //     },
-            //     onComplete() {
-            //         setTimeout(() => {
-            //             animate = animatePapers();
-            //         }, 200);
-            //         if (count === 4) count = 0;
-            //         else count++;
-            //         setObstacle(count);
-            //         obstacles.current.restart();
-            //     }
-            // });
+            obstacles.current.to('[data-action="obstacles.item"]', {
+                x: -(window.innerWidth + (isMobile ? 100 : 500)),
+                duration: window.innerWidth < 420 ? 3 : isMobile ? 4 : 5.2,
+                ease: 'linear',
+                onUpdate() {
+                    const obj2 = person?.querySelector('g');
+                    if (obj && obj2) {
+                        const objRect = obj.getBoundingClientRect();
+                        const personRect = obj2.getBoundingClientRect();
+                        if (!isGamePaused && checkCollision(personRect, objRect) && person || isFinish) {
+                            setIsFails(true);
+                        }
+                    }
+                },
+                onComplete() {
+                    setTimeout(() => {
+                        animate = animatePapers();
+                    }, 200);
+                    if (count === 4) count = 0;
+                    else count++;
+                    setObstacle(count);
+                    obstacles.current.restart();
+                }
+            });
         }
 
         return () => {
@@ -90,7 +100,7 @@ const useObstacles = ({
         };
     }, {
         scope: root,
-        dependencies: [started],
+        dependencies: [started, isFinish],
     });
 
     return {

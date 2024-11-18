@@ -6,7 +6,7 @@ import useStore from 'store';
 import confetiJson from 'assets/icons/confetti.json';
 
 const useResult = () => {
-    const { isOpenResult, chooseHero, coins, isGameFinish, isGameOver } = useStore(state => state);
+    const { isOpenResult, chooseHero, coins, isGameFinish, isGameOver, addOpenWinModal } = useStore(state => state);
     const root = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
@@ -58,11 +58,20 @@ const useResult = () => {
         ],
     });
     
+    const openWin = (n: number) => () => {
+        if (coins < n) return;
+
+        if (chooseHero) {
+            addOpenWinModal(chooseHero, n);
+        }
+    };
+
     return {
         root,
         hero: chooseHero,
         isWin: isGameFinish && coins === 3,
         coins,
+        openWin,
     };
 };
 

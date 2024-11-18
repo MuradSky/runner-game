@@ -19,22 +19,37 @@ interface State {
     isGameOver: boolean;
     isGameFinish: boolean;
     isOpenResult: boolean;
+    openWinModal: (string | number)[]
+    addOpenWinModal: (t?: string, n?: number) => void,
 }
 
 const initState = {
-    isBack: true,
-    chooseHero: null,
-    isOpenPreview: false,
+    isBack: false,
+    chooseHero: 'rom',
+    isOpenPreview: true,
     coins: 0,
     isGamePaused: false,
     isGameOver: false,
     isGameFinish: false,
     isOpenResult: false,
+    openWinModal: [],
 };
 
 const useStore = create<State>()(
     (set, get) => ({
         ...initState,
+
+        addOpenWinModal(t, n) {
+            if (t && n && n >-1) {
+                set({
+                    openWinModal: [t, n]
+                });
+            } else {
+                set({
+                    openWinModal: []
+                });
+            }
+        },
         addOpenResult(isOpenResult) {
             set({
                 isOpenResult,

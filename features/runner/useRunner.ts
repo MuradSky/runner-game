@@ -3,21 +3,28 @@ import useStore from 'store';
 import useObstacles from './useObstacles';
 import useLoop from './useLoop';
 import usePerson from './usePerson';
+import { setTimeout } from 'timers';
 
 interface Props {
     isStart: boolean;
 }
 
 const useRunner = ({ isStart }: Props) => {
-    const { chooseHero, addCoin, isGamePaused, addIsFinish, addIsGameOver } = useStore(state => state);
+    const { addCoin, isGamePaused, addIsFinish, isGameFinish, addIsGameOver } = useStore(state => state);
     const root = useRef<HTMLDivElement | null>(null);
     const [isFail, setIsFails] = useState(false);
     const [started, setStarted] = useState(false);
     const [round, setRound] = useState(0);
-
-    const { obstacles, currentObstacle } = useObstacles({ started, root, setIsFails });
-    const { loop1, loop2 } = useLoop({ started, root });
-    const { animation, lottie, loadAnimate } = usePerson({ root, started, chooseHero, isFail, });
+    const roundTl = useRef<NodeJS.Timeout | null>(null);
+    const { obstacles, currentObstacle } = useObstacles({
+        started, root, setIsFails
+    });
+    const { loop1 } = useLoop({ started, root });
+    const { animation, lottie, loadAnimate, personTl, } = usePerson({
+        root,
+        started,
+        isFail,
+    });
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -39,13 +46,21 @@ const useRunner = ({ isStart }: Props) => {
 
     useEffect(() => {
         if (isFail) {
+            setStarted(false);
+            gameOver();
+            roundTl.current && clearTimeout(roundTl.current);
+            roundTl.current = null;
             const timeOut = setTimeout(() => {
-                addIsFinish();
                 addIsGameOver();
             }, 1000);
             return () => clearTimeout(timeOut);
         }
-        if (round === 3) addIsFinish();
+        if (round === 3) {
+            const timeOut = setTimeout(() => {
+                addIsFinish();
+            }, 2000);
+            return () => clearTimeout(timeOut);
+        }
     }, [round, isFail]);
 
     useEffect(() => {
@@ -53,61 +68,56 @@ const useRunner = ({ isStart }: Props) => {
         else play();
     }, [isGamePaused]);
 
+    
     useEffect(() => {
-        if (isFail) {
-            setStarted(false);
-            gameOver();
+        if (isFail || isGameFinish || animation.current?.isPaused || !started) {
+            roundTl.current && clearTimeout(roundTl.current);
+            roundTl.current = null;
+            return;
         }
-        // else play();
-    }, [isFail]);
-
-    useEffect(() => {
-        let timeOut: NodeJS.Timeout | null = null;
-        if (animation.current?.isPaused && timeOut) {
-            clearTimeout(timeOut);
-        }
-
-        if (started && !animation.current?.isPaused) {
-            timeOut = setTimeout(() => {
+        
+        roundTl.current = setTimeout(() => {
+            if (!isFail && !isGameFinish && started && !animation.current?.isPaused) {
                 setRound(round + 1);
                 addCoin();
-            }, 8000);
-        }
+            }
+        }, 9000);
 
         return () => {
-            if (timeOut) {
-                clearTimeout(timeOut);
+            if (roundTl.current) {
+                clearTimeout(roundTl.current);
+                roundTl.current = null;
             }
         };
-    }, [started, animation, round, isGamePaused]);
+    }, [started, animation, isGamePaused, isGameFinish, isFail]);
 
     const play = () => {
+        personTl.current.play();
         if (animation.current) {
             animation.current.isPaused = false;
         }
 
-        loop1.current.play();
-        loop2.current.play();
-        obstacles.current.play();
+        if (!isGameFinish) {
+            loop1.current.play();
+            obstacles.current.play();
+        }
     };
 
     const pause = () => {
+        loop1.current.pause();
+        personTl.current.pause();
+        obstacles.current.pause();
         if (animation.current) {
             animation.current.isPaused = true;
         }
-        loop1.current.pause();
-        loop2.current.pause();
-        obstacles.current.pause();
     };
 
     const gameOver = () => {
-        const person = root.current?.querySelector<HTMLDivElement>('[data-selector="game.person"]');
         loop1.current.pause();
-        loop2.current.pause();
         obstacles.current.pause();
-
-        if (animation.current && person) {
-            loadAnimate('fall', person);
+       
+        if (animation.current) {
+            loadAnimate('fall');
             const timer = setTimeout(() => {
                 if (animation.current) animation.current.isPaused = true;
             }, 1000);

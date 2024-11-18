@@ -128,18 +128,24 @@
     &._1 {
         .item:first-child {
             opacity: 1;
+            cursor: pointer;
+            pointer-events: auto;
         }
     }
 
     &._2 {
         .item:not(:last-child) {
             opacity: 1;
+            cursor: pointer;
+            pointer-events: auto;
         }
     }
 
     &._3 {
         .item {
             opacity: 1;
+            cursor: pointer;
+            pointer-events: auto;
         }
     }
 }
@@ -150,6 +156,7 @@
     align-items: center;
     width: 110px;
     opacity: 0.3;
+    pointer-events: none;
     i {
         width: 68px;
         height: 68px;
@@ -243,6 +250,7 @@ button.regist {
 
     @media (max-width: 768px) {
         max-width: 100%;
+        top: 0;
         width: 100%;
     }
 }

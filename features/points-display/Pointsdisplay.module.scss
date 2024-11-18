@@ -80,6 +80,30 @@
 
 .coin {
     opacity: 0.3;
+    width: 70px;
+    height: 70px;
+    border-radius: 56px;
+    background: rgba(255, 255, 255, 0.10);
+    box-shadow: -5px -5px 15px -15px rgba(255, 255, 255, 0.10) inset, 0px 0px 10px 0px rgba(255, 255, 255, 0.16) inset;
+    border: 6px solid transparent;
+    outline: 1px solid rgba(255, 255, 255, 0.32);
+    position: relative;
+    img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(.2);
+        z-index: 100;
+    }
+    @media (max-width: 768px) {
+        width: 44px;
+        min-width: 44px;
+        height: 44px;
+
+        img {
+            transform: translate(-50%, -50%) scale(.1);
+        }
+    }   
 }
 
 svg.check {
@@ -119,11 +143,9 @@ svg.check {
         height: 44px;
     }
 
-    box-shadow:
-            0 0 60px 1px rgba(229, 121, 0, .1) inset,
-            0 0 60px 1px rgba(229, 121, 0, .1) inset,
-            0 0 30px 1px rgba(229, 121, 0, .1),
-            0 0 30px 1px rgba(229, 121, 0, .1);
+    svg {
+        // transform: translateX(200px);
+    }
 }
 
 

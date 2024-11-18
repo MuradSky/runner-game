@@ -1,8 +1,9 @@
-import { RefObject, useRef } from 'react';
+import { RefObject, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { AnimationItem, LottiePlayer } from 'lottie-web';
 import { useScreenSize } from 'hooks';
+import useStore from 'store';
 
 import maxFall from 'assets/personal/max/max_fall.json';
 import maxRun from 'assets/personal/max/max_run.json';
@@ -41,59 +42,79 @@ const animations: Anim = {
     }
 };
 
-
 interface Props {
     started: boolean;
     root: RefObject<HTMLDivElement>;
-    chooseHero: null | string;
     isFail: boolean;
 }
 
 const usePerson = ({
     root,
     started,
-    chooseHero,
     isFail,
 }: Props) => {
+    const { isGameFinish: isFinish, isGamePaused, chooseHero, addOpenResult } = useStore(state => state);
     const { isMobile } = useScreenSize();
     const lottie = useRef<LottiePlayer | null>(null);
     const animation = useRef<AnimationItem | null>(null);
     const personTl = useRef<GSAPTimeline>(gsap.timeline());
 
+    useEffect(() => {
+        if (chooseHero && started && !isGamePaused) {
+            loadAnimate('run');
+        }
+    }, [chooseHero, started, isGamePaused]);
+
+    useGSAP(() => {
+        const person = root.current?.querySelector('[data-selector="game.person"]');
+        if (!isGamePaused && isFinish && person) {
+            loadAnimate('run');
+            personTl.current.to(person, {
+                x: (window.innerWidth / 2) + 300,
+                ease: 'liear',
+                duration: 2,
+                onComplete() {
+                    personTl.current.kill();
+                    addOpenResult(true);
+                }
+            });
+        }
+    }, {
+        scope: root,
+        dependencies: [
+            isFinish, isGamePaused
+        ],
+    });
+
     useGSAP(() => {
         const person = root.current?.querySelector<HTMLDivElement>('[data-selector="game.person"]');
         let isJump = false;
 
-        if (chooseHero && started && person) {
-            loadAnimate('run', person);
-        }
-
-        if (isFail && person) {
+        if (isFail || isFinish) {
             personTl.current.kill();
-            gsap.to(person, {
+            gsap.to(person as HTMLElement, {
                 y: 0,
                 duration: .5,
             });
         }
 
         const onJumping = (e: KeyboardEvent | PointerEvent) => {
-            if (isJump || !started || isFail) return;
+            if (isJump || !started || isFail || isFinish) return;
             if (((e as KeyboardEvent).keyCode === 32
                 || (e as KeyboardEvent).keyCode === 38
                 || (e as PointerEvent).type === 'pointerdown')
                 && !animation.current?.isPaused
             ) {
                 isJump = true;
-                
                 if (person) {
-                    loadAnimate('jump', person);
+                    loadAnimate('jump');
                     personTl.current.to(person, {
                         y: isMobile ? -240 : -400,
                         duration: .5,
                         onComplete() {
                             gsap.to(person, {
                                 x: 0,
-                                duration: isMobile ? 1.5 : 1,
+                                duration: isMobile ? 2 : 1,
                                 delay: .3,
                             });
                         }
@@ -102,12 +123,11 @@ const usePerson = ({
                     personTl.current.to(person, {
                         y: 0,
                         duration: .35,
-                        onComplete() {    
+                        onComplete() {
                             isJump = false;
                             if (!animation.current?.isPaused) {
-                                loadAnimate('run', person);
+                                loadAnimate('run');
                             }
-                            
                         }
                     });
                     gsap.to(person, {
@@ -119,23 +139,24 @@ const usePerson = ({
             }
         };
         
-        window?.addEventListener('keydown', onJumping, false);
-        window?.addEventListener('pointerdown', onJumping, false);
+        window?.addEventListener('keydown', onJumping);
+        window?.addEventListener('pointerdown', onJumping);
         return () => {
             if (animation.current) {
                 animation.current.destroy();
                 animation.current = null;
             }
             personTl.current.kill();
-            window?.removeEventListener('pointerdown', onJumping, false);
-            window?.removeEventListener('keydown', onJumping, false);
+            window?.removeEventListener('pointerdown', onJumping);
+            window?.removeEventListener('keydown', onJumping);
         };
     }, {
         scope: root,
-        dependencies: [started, chooseHero, lottie, isFail],
+        dependencies: [started, chooseHero, lottie, isFail, isFinish],
     });
 
-    const loadAnimate = (key: string, person: HTMLDivElement) => {
+    const loadAnimate = (key: string) => {
+        const person = root.current?.querySelector<HTMLDivElement>('[data-selector="game.person"]');
         if (animation.current) {
             animation.current.destroy();
         }
@@ -145,6 +166,7 @@ const usePerson = ({
                 container: person,
                 renderer: 'svg',
                 loop: true,
+                name: key,
                 autoplay: started,
                 animationData: chooseHero && animations[chooseHero][key],
             });

@@ -9,9 +9,7 @@ import Ochivka from 'assets/icons/ochivka.svg';
 import styles from './WinModal.module.scss';
 
 const WinModal = () => {
-    const { current, scene, hero, root, onClick } = useWinModal();
-    const icon = current && current[scene || 0]?.icon;
-    
+    const { current, scene, hero, root, onClick, isClosed } = useWinModal();
     return (
         <div className={styles.block} ref={root}>
             <div className={styles.wrap}>
@@ -21,7 +19,7 @@ const WinModal = () => {
                     </div>
                     <div className={styles.coin}>
                         <Ochivka />
-                        <img src={icon || ''} alt="" className={styles.och} />
+                        <div className={styles.anim} data-action="coin.anim" />
                     </div>
                     <div className={styles.title}>
                         {current && current[scene || 0]?.title}
@@ -41,7 +39,7 @@ const WinModal = () => {
                     </div>
 
                     <Button cssClass={styles.button} onClick={onClick}>
-                        Продолжить!
+                        { !isClosed ? 'Продолжить!' : 'Закрыть'}
                     </Button>
                 </div>
             </div>

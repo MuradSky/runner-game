@@ -54,6 +54,10 @@
     flex-direction: column;
     justify-content: space-between;
 
+    @media (max-width: 1280px) {
+        justify-content: flex-start;
+    }
+
     @media (max-width: 1024px) {
         padding: 80px 15px;
     }
@@ -106,6 +110,7 @@
         filter: blur(40px);
         border-radius: 600px;
     }
+
 
     &[data-person="maks"]::before {
         background: radial-gradient(100.86% 60.37% at 56.05% 47.59%, #FFF 0%, #D3FFB1 13.32%, #97F252 40.61%, #10BD00 63.06%, #1A1A1A 100%);
@@ -180,7 +185,7 @@
         padding: 24px;
         @media (max-width: 768px) {
             padding: 15px;
-            transform: translateY(-120px);
+            // transform: translateY(-120px);
         }
     }
 
@@ -230,7 +235,12 @@
 
 .person {
     position: relative;
-
+    @media (max-width: 1280px) {
+        max-height: 220px;
+    }
+    @media (max-width: 768px) {
+        max-height: 240px;
+    }
     .person_anim {
         position: absolute;
         top: 0;
@@ -238,6 +248,10 @@
         height: 100%;
         transform: translateX(-50%);
    
+        @media (max-width: 1280px) {
+            width: 100px;
+        }
+
         @media (max-width: 768px) {
             width: 100px;
             height: 240px;
