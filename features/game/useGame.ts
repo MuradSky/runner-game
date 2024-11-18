@@ -6,7 +6,7 @@ import useStore from 'store';
 const useGame = () => {
     const { chooseHero, isOpenResult, isGameOver } = useStore();
     const root = useRef<HTMLDivElement | null>(null);
-    const [isStart, setIsStart] = useState(true);
+    const [isStart, setIsStart] = useState(false);
     const [gameStart, setGameStart] = useState(false);
     const [isClear, setIsClear] = useState(false);
     const [isShow, setIsShow] = useState(false);
@@ -45,14 +45,14 @@ const useGame = () => {
     useGSAP(() => {
         if (root.current) {            
             if (chooseHero && !isStart) {
-                // gsap.to('[data-seletor="game.preview"]', {
-                //     y: 0,
-                //     opacity: 1,
-                //     delay: 1,
-                //     onComplete() {
-                //         setIsShow(true);
-                //     }
-                // });
+                gsap.to('[data-seletor="game.preview"]', {
+                    y: 0,
+                    opacity: 1,
+                    delay: 1,
+                    onComplete() {
+                        setIsShow(true);
+                    }
+                });
             } else if (isStart) {
                 gsap.to('[data-seletor="game.preview"]', {
                     y: '120%',

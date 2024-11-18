@@ -34,7 +34,6 @@ const Hero = () => {
                 fadeEffect={{ crossFade: true }}
                 onSwiper={(swiper: SwiperClass) => setSwiper(swiper)}
                 className={styles.view}
-                initialSlide={3}
             >
                 <SwiperSlide className={styles.item}>
                     <div className={classNames(styles.content, isPreview && styles.static)} ref={root}>

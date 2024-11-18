@@ -24,9 +24,9 @@ interface State {
 }
 
 const initState = {
-    isBack: false,
-    chooseHero: 'rom',
-    isOpenPreview: true,
+    isBack: true,
+    chooseHero: null,
+    isOpenPreview: false,
     coins: 0,
     isGamePaused: false,
     isGameOver: false,
