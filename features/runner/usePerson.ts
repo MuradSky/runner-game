@@ -53,11 +53,13 @@ const usePerson = ({
     started,
     isFail,
 }: Props) => {
-    const { isGameFinish: isFinish, isGamePaused, chooseHero, addOpenResult } = useStore(state => state);
-    const { isMobile } = useScreenSize();
+    const { isGameFinish, isGamePaused, chooseHero, addOpenResult } = useStore(state => state);
+    const { isMobile, isLaptop } = useScreenSize();
     const lottie = useRef<LottiePlayer | null>(null);
     const animation = useRef<AnimationItem | null>(null);
-    const personTl = useRef<GSAPTimeline>(gsap.timeline());
+    const personTl = useRef<GSAPTimeline | null>(null);
+    const personTlRev = useRef<GSAPAnimation | null>(null);
+    const isFailLocal = useRef(false);
 
     useEffect(() => {
         if (chooseHero && started && !isGamePaused) {
@@ -65,16 +67,25 @@ const usePerson = ({
         }
     }, [chooseHero, started, isGamePaused]);
 
+    useEffect(() => {
+        if (personTl.current && isFail) {
+            personTl.current.kill();
+            personTl.current = null;
+            loadAnimate('fall');
+            isFailLocal.current = true;
+        } 
+    }, [isFail]);
+
     useGSAP(() => {
         const person = root.current?.querySelector('[data-selector="game.person"]');
-        if (!isGamePaused && isFinish && person) {
+        if (isGameFinish && !isGamePaused) {
+            personTl.current?.kill();            
             loadAnimate('run');
-            personTl.current.to(person, {
+            gsap.to(person as HTMLDivElement, {
                 x: (window.innerWidth / 2) + 300,
                 ease: 'liear',
                 duration: 2,
                 onComplete() {
-                    personTl.current.kill();
                     addOpenResult(true);
                 }
             });
@@ -82,24 +93,31 @@ const usePerson = ({
     }, {
         scope: root,
         dependencies: [
-            isFinish, isGamePaused
+            isGameFinish,
+            isGamePaused,
         ],
     });
 
     useGSAP(() => {
+        personTl.current = gsap.timeline();
+        personTlRev.current = gsap.timeline();
         const person = root.current?.querySelector<HTMLDivElement>('[data-selector="game.person"]');
         let isJump = false;
 
-        if (isFail || isFinish) {
+        if (isFailLocal.current || isGameFinish) {
             personTl.current.kill();
+            personTlRev.current.kill();
             gsap.to(person as HTMLElement, {
                 y: 0,
                 duration: .5,
             });
         }
 
-        const onJumping = (e: KeyboardEvent | PointerEvent) => {
-            if (isJump || !started || isFail || isFinish) return;
+        const onJumping = (e: KeyboardEvent | PointerEvent) => {            
+            if (isJump || !started || isFailLocal.current || isGameFinish) {
+                return;
+            }
+
             if (((e as KeyboardEvent).keyCode === 32
                 || (e as KeyboardEvent).keyCode === 38
                 || (e as PointerEvent).type === 'pointerdown')
@@ -108,32 +126,37 @@ const usePerson = ({
                 isJump = true;
                 if (person) {
                     loadAnimate('jump');
-                    personTl.current.to(person, {
-                        y: isMobile ? -240 : -400,
+                    gsap.to(person, {
+                        x: isMobile ? 250 : 280,
                         duration: .5,
-                        onComplete() {
-                            gsap.to(person, {
-                                x: 0,
-                                duration: isMobile ? 2 : 1,
-                                delay: .3,
-                            });
-                        }
+                        delay: .3,
+                        onStart() {
+                            personTlRev.current?.pause();
+                        },
+                    });
+                    personTl.current?.to(person, {
+                        y: isMobile ? -240 : isLaptop ? -300 : -400,
+                        duration: .5,
+                        // onComplete() {
+                            
+                        // }
                     });
 
-                    personTl.current.to(person, {
+                    personTl.current?.to(person, {
                         y: 0,
                         duration: .35,
                         onComplete() {
+                            personTlRev.current = gsap.to(person, {
+                                x: 0,
+                                duration: isMobile ? 2 : 1,
+                                easy: 'linear'
+                            });
+                            console.log(isFailLocal.current);
                             isJump = false;
-                            if (!animation.current?.isPaused) {
+                            if (!isFailLocal.current || !animation.current?.isPaused) {
                                 loadAnimate('run');
                             }
-                        }
-                    });
-                    gsap.to(person, {
-                        x: isMobile ? 200 : 250,
-                        duration: .5,
-                        delay: .3,
+                        },
                     });
                 }
             }
@@ -146,16 +169,21 @@ const usePerson = ({
                 animation.current.destroy();
                 animation.current = null;
             }
-            personTl.current.kill();
+            personTl.current?.kill();
+            personTl.current = null;
+            personTlRev.current?.kill();
+            personTlRev.current = null;
             window?.removeEventListener('pointerdown', onJumping);
             window?.removeEventListener('keydown', onJumping);
         };
     }, {
         scope: root,
-        dependencies: [started, chooseHero, lottie, isFail, isFinish],
+        dependencies: [started, chooseHero, lottie, isFailLocal, isGameFinish],
     });
 
     const loadAnimate = (key: string) => {
+        console.log(isFail);
+
         const person = root.current?.querySelector<HTMLDivElement>('[data-selector="game.person"]');
         if (animation.current) {
             animation.current.destroy();
@@ -177,6 +205,7 @@ const usePerson = ({
         lottie,
         animation,
         personTl,
+        personTlRev,
         loadAnimate,
     };
 };

@@ -8,12 +8,23 @@ import Button from 'components/button';
 import { classNames } from 'utils';
 
 const Result = () => {
-    const { root, hero, isWin, coins, openWin } = useResult();
+    const {
+        root,
+        hero,
+        isWin,
+        coins,
+        openWin,
+        isMobile,
+        isGameFail,
+    } = useResult();
+
     return (
         <>
-            <div className={styles.block} ref={root}>    
+            <div className={classNames(styles.block, isGameFail && styles.is_fail)} ref={root}>    
                 <div className={styles.wrap}>
-                    <div className={styles.confeti} data-selector="confeti" />
+                    {(!isGameFail && !isMobile) && (
+                        <div className={styles.confeti} data-selector="confeti" />
+                    )}
                     <div className={styles.content}>
                         <div className={styles.title}>
                             {isWin ? 'Магистр геймификации' : 'Почтииииии'}

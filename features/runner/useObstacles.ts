@@ -9,6 +9,7 @@ import useStore from 'store';
 
 interface Props {
     started: boolean;
+    isFinish: boolean;
     root: RefObject<HTMLDivElement>;
     setIsFails: (v: boolean) => void;
 }
@@ -16,9 +17,10 @@ interface Props {
 const useObstacles = ({
     started,
     root,
+    isFinish,
     setIsFails
 }: Props) => {
-    const { isGameFinish: isFinish, isGamePaused } = useStore(state => state);
+    const { isGamePaused } = useStore(state => state);
     const { isMobile, isLaptop } = useScreenSize();
     const obstacles = useRef<GSAPTimeline>(gsap.timeline());
     const [currentObstacle, setObstacle] = useState(0);
@@ -60,17 +62,25 @@ const useObstacles = ({
 
         if (root.current && started) {
             const checkCollision = (rect1: ClientRect, rect2: ClientRect) => {
+                if (isMobile) {
+                    return (
+                        rect1.left < rect2.right &&
+                        rect1.right > rect2.left &&
+                        rect1.top < rect2.bottom &&
+                        rect1.bottom > rect2.top
+                    );
+                }
                 return (
-                    rect1.left < rect2.right &&
-                    rect1.right > rect2.left &&
+                    rect1.left < (rect2.right - 45) &&
+                   (rect1.right - 50) > rect2.left &&
                     rect1.top < rect2.bottom &&
                     rect1.bottom > rect2.top
                 );
             };
 
             obstacles.current.to('[data-action="obstacles.item"]', {
-                x: -(window.innerWidth + (isMobile ? 100 : 500)),
-                duration: window.innerWidth < 420 ? 3 : isMobile ? 4 : 5.2,
+                x: -(window.innerWidth + (500)),
+                duration: window.innerWidth < 420 ? 4 : isMobile ? 4 : 5.2,
                 ease: 'linear',
                 onUpdate() {
                     const obj2 = person?.querySelector('g');

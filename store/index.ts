@@ -19,8 +19,10 @@ interface State {
     isGameOver: boolean;
     isGameFinish: boolean;
     isOpenResult: boolean;
+    isGameFail: boolean;
     openWinModal: (string | number)[]
     addOpenWinModal: (t?: string, n?: number) => void,
+    addFail: () => void,
 }
 
 const initState = {
@@ -33,6 +35,7 @@ const initState = {
     isGameFinish: false,
     isOpenResult: false,
     openWinModal: [],
+    isGameFail: false,
 };
 
 const useStore = create<State>()(
@@ -53,6 +56,11 @@ const useStore = create<State>()(
         addOpenResult(isOpenResult) {
             set({
                 isOpenResult,
+            });
+        },
+        addFail() {
+            set({
+                isGameFail: true,
             });
         },
         addIsFinish() {

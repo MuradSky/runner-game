@@ -4,9 +4,20 @@ import usePoints from './usePoints';
 
 import Check from 'assets/svg/checkmark.svg';
 import styles from './Pointsdisplay.module.scss';
+interface Props {
+    achievement: number;
+    isStart: boolean;
+    isPause: boolean;
+    isFail: boolean;
+}
 
-const Pointsdisplay = () => {
-    const { root, icons } = usePoints();
+const Pointsdisplay = ({
+    isStart,
+    isPause,
+    achievement,
+    isFail,
+}: Props) => {
+    const { root, icons } = usePoints(isStart, isPause, achievement, isFail);
     return (
         <div ref={root}>
             <div className={styles.block}>

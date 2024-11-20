@@ -4,12 +4,23 @@ import gsap from 'gsap';
 import useStore from 'store';
 
 import confetiJson from 'assets/icons/confetti.json';
+import { useScreenSize } from 'hooks';
 
 const useResult = () => {
-    const { isOpenResult, chooseHero, coins, isGameFinish, isGameOver, addOpenWinModal } = useStore(state => state);
+    const { isMobile } = useScreenSize();
+    const {
+        isOpenResult,
+        chooseHero,
+        coins,
+        isGameFinish,
+        isGameOver,
+        addOpenWinModal,
+        isGameFail
+    } = useStore(state => state);
     const root = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
+        if (isMobile) return;
         const lottieWeb = require('lottie-web');
         
         const confeti = root.current?.querySelector('[data-selector="confeti"]');
@@ -25,7 +36,7 @@ const useResult = () => {
         }
 
         return () => lottieWeb.destroy();
-    }, []);
+    }, [isMobile]);
     
     useGSAP(() => {
         if (root.current) {
@@ -72,6 +83,8 @@ const useResult = () => {
         isWin: isGameFinish && coins === 3,
         coins,
         openWin,
+        isMobile,
+        isGameFail,
     };
 };
 

@@ -4,23 +4,27 @@ import useObstacles from './useObstacles';
 import useLoop from './useLoop';
 import usePerson from './usePerson';
 import { setTimeout } from 'timers';
+import { useScreenSize } from 'hooks';
 
 interface Props {
     isStart: boolean;
 }
 
 const useRunner = ({ isStart }: Props) => {
-    const { addCoin, isGamePaused, addIsFinish, isGameFinish, addIsGameOver } = useStore(state => state);
+    const { isMobile } = useScreenSize();
+    const { isGamePaused, addIsFinish, isGameFinish, addIsGameOver, addFail } = useStore(state => state);
     const root = useRef<HTMLDivElement | null>(null);
+    const [timeLeft, setTimeLeft] = useState(30); 
     const [isFail, setIsFails] = useState(false);
+    const [isFinish, setIsFinish] = useState(false);
     const [started, setStarted] = useState(false);
-    const [round, setRound] = useState(0);
+    const [achievement, setAchievement] = useState(0); 
     const roundTl = useRef<NodeJS.Timeout | null>(null);
     const { obstacles, currentObstacle } = useObstacles({
-        started, root, setIsFails
+        started, root, setIsFails, isFinish,
     });
     const { loop1 } = useLoop({ started, root });
-    const { animation, lottie, loadAnimate, personTl, } = usePerson({
+    const { animation, lottie, loadAnimate, personTl, personTlRev, } = usePerson({
         root,
         started,
         isFail,
@@ -46,6 +50,7 @@ const useRunner = ({ isStart }: Props) => {
 
     useEffect(() => {
         if (isFail) {
+            addFail();
             setStarted(false);
             gameOver();
             roundTl.current && clearTimeout(roundTl.current);
@@ -55,44 +60,42 @@ const useRunner = ({ isStart }: Props) => {
             }, 1000);
             return () => clearTimeout(timeOut);
         }
-        if (round === 3) {
-            const timeOut = setTimeout(() => {
-                addIsFinish();
-            }, 2000);
-            return () => clearTimeout(timeOut);
-        }
-    }, [round, isFail]);
+    }, [isFail]);
 
     useEffect(() => {
         if (isGamePaused) pause();
         else play();
     }, [isGamePaused]);
 
-    
     useEffect(() => {
-        if (isFail || isGameFinish || animation.current?.isPaused || !started) {
-            roundTl.current && clearTimeout(roundTl.current);
-            roundTl.current = null;
+        if (timeLeft <= 0 && !isGamePaused) {
+            setIsFinish(true);
+            if (!isGamePaused) addIsFinish();
             return;
         }
-        
-        roundTl.current = setTimeout(() => {
-            if (!isFail && !isGameFinish && started && !animation.current?.isPaused) {
-                setRound(round + 1);
-                addCoin();
-            }
-        }, 9000);
+        if (isGamePaused) return;
+        roundTl.current = setInterval(() => {
+            setTimeLeft((prev) => prev - 1);
+        }, 1000);
+        return () => clearInterval(roundTl.current || 0); // Очищаем таймер при размонтировании
+    }, [timeLeft, isGamePaused]);
 
-        return () => {
-            if (roundTl.current) {
-                clearTimeout(roundTl.current);
-                roundTl.current = null;
-            }
-        };
-    }, [started, animation, isGamePaused, isGameFinish, isFail]);
+    useEffect(() => {
+        if (isMobile ? (timeLeft === 21) : (timeLeft === 22) && !isGamePaused) {
+            setAchievement(1);
+        }
+        if (isMobile ? (timeLeft === 11) : timeLeft === 12 && !isGamePaused) {
+            setAchievement(2);
+        }
+
+        if (isMobile ? (timeLeft === 1) : timeLeft === 2 && !isGamePaused) {
+            setAchievement(3);
+        }
+    }, [timeLeft, isGamePaused]);
 
     const play = () => {
-        personTl.current.play();
+        personTl.current?.play();
+        personTlRev.current?.play();
         if (animation.current) {
             animation.current.isPaused = false;
         }
@@ -105,7 +108,8 @@ const useRunner = ({ isStart }: Props) => {
 
     const pause = () => {
         loop1.current.pause();
-        personTl.current.pause();
+        personTl.current?.pause();
+        personTlRev.current?.pause();
         obstacles.current.pause();
         if (animation.current) {
             animation.current.isPaused = true;
@@ -126,9 +130,13 @@ const useRunner = ({ isStart }: Props) => {
     };
 
     return {
+        achievement,
+        started,
+        isPause: isFail || isGamePaused,
         root,
         pause,
-        currentObstacle
+        currentObstacle,
+        isFail,
     };
 };
 

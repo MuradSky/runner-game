@@ -14,13 +14,13 @@ const calDur = () => {
         window.innerWidth > 1729 ? 8.2 :
             window.innerWidth <= 1728 && window.innerWidth > 1681 ? 8 :
                 window.innerWidth <= 1680 && window.innerWidth >= 1601 ? 9 :
-                    window.innerWidth <= 1600 && window.innerWidth >= 1441 ? 9.2 :
+                    window.innerWidth <= 1600 && window.innerWidth >= 1441 ? 7.7 :
                         window.innerWidth <= 1440 && window.innerWidth >= 1361 ? 8.2 :
                             window.innerWidth <= 1360 && window.innerWidth >= 1281 ? 8.4 :
                                 window.innerWidth <= 1280 && window.innerWidth >= 1025 ? 8 :
                                     window.innerWidth <= 1024 && window.innerWidth >= 961 ? 9 : 
                                         window.innerWidth <= 960 && window.innerWidth >= 769 ? 8.8 :
-                                            window.innerWidth <= 768 && window.innerWidth >= 601 ? 10.2 :
+                                            window.innerWidth <= 768 && window.innerWidth >= 601 ? 12 :
                                                 window.innerWidth <= 600 && window.innerWidth >= 541 ? 12 : 
                                                     window.innerWidth <= 540 && window.innerWidth >= 481 ? 12 :
                                                         window.innerWidth <= 480 && window.innerWidth >= 376 ? 15 :
@@ -62,15 +62,6 @@ const useLoop = ({
                     ease: 'linear',
                     repeat: -1,
                 });
-                // loop1.current.play();
-
-                // loop2.current.to('[data-selector="obstacles"]', {
-                //     x: -8000, 
-                //     duration: 18.5,
-                //     ease: 'linear',
-                //     repeat: -1,
-                // });
-                // loop2.current.play();
             }
         }
 

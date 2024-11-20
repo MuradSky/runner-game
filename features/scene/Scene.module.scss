@@ -112,16 +112,18 @@
     }
 
 
-    &[data-person="maks"]::before {
-        background: radial-gradient(100.86% 60.37% at 56.05% 47.59%, #FFF 0%, #D3FFB1 13.32%, #97F252 40.61%, #10BD00 63.06%, #1A1A1A 100%);
-    }
-
-    &[data-person="rom"]::before {
-        background: radial-gradient(106.53% 65.59% at 56.05% 47.59%, #FFF 0%, #C2E0FF 13.32%, #66AAEF 40.61%, #006CD7 63.06%, #1A1A1A 100%);
-    }
-
-    &[data-person="ann"]::before {
-        background: radial-gradient(104.7% 64.46% at 56.05% 47.59%, #FFF 0%, #FFF8B6 13.32%, #FFE600 31.49%, #FF7B01 63.06%, #1A1A1A 100%);
+    @media (min-width: 769px) {
+        &[data-person="maks"]::before {
+            background: radial-gradient(100.86% 60.37% at 56.05% 47.59%, #FFF 0%, #D3FFB1 13.32%, #97F252 40.61%, #10BD00 63.06%, #1A1A1A 100%);
+        }
+    
+        &[data-person="rom"]::before {
+            background: radial-gradient(106.53% 65.59% at 56.05% 47.59%, #FFF 0%, #C2E0FF 13.32%, #66AAEF 40.61%, #006CD7 63.06%, #1A1A1A 100%);
+        }
+    
+        &[data-person="ann"]::before {
+            background: radial-gradient(104.7% 64.46% at 56.05% 47.59%, #FFF 0%, #FFF8B6 13.32%, #FFE600 31.49%, #FF7B01 63.06%, #1A1A1A 100%);
+        }
     }
 
     &.is_show {

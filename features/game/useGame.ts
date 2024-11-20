@@ -46,19 +46,21 @@ const useGame = () => {
         if (root.current) {            
             if (chooseHero && !isStart) {
                 gsap.to('[data-seletor="game.preview"]', {
-                    y: 0,
                     opacity: 1,
                     delay: 1,
+                    zIndex: 10000,
                     onComplete() {
                         setIsShow(true);
                     }
                 });
             } else if (isStart) {
                 gsap.to('[data-seletor="game.preview"]', {
-                    y: '120%',
                     opacity: 0,
-                    delay: 0,
                     onComplete() {
+                        gsap.set('[data-seletor="game.preview"]', {
+                            display: 'none',
+                            zIndex: -1000
+                        });
                         if (isStart) {
                             setIsClear(true);
                             setGameStart(true);

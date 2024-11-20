@@ -26,7 +26,7 @@ const useWinModal = () => {
             setCurrent(null);
         }
     }, [isOpenResult]);
-
+    
     useEffect(() => {
         const lottie: LottiePlayer = require('lottie-web');
         let animate: AnimationItem | null = null;
@@ -44,6 +44,7 @@ const useWinModal = () => {
         
         return () => {
             animate?.destroy();
+            animate = null;
         };
     }, [current, scene]);
 
@@ -53,6 +54,7 @@ const useWinModal = () => {
                 gsap.to(root.current, {
                     opacity: 1,
                     display: 'block',
+                    delay: .5,
                 });
             } else {
                 gsap.to(root.current, {

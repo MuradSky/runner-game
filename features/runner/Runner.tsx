@@ -21,7 +21,16 @@ interface RunnerProps {
 
 const Runner = ({ isClear, isStart }: RunnerProps) => {
     const { isMobile, isLaptop, isMobileSm } = useScreenSize();
-    const { root, currentObstacle } = useRunner({ isStart });
+    const {
+        root,
+        achievement,
+        currentObstacle,
+        started,
+        isPause,
+        isFail,
+    } = useRunner({ isStart });
+
+
     const objects: { [key: number]: ReactNode } = {
         0:  <PC width={isMobileSm  ? 100  : isMobile ?  130 : isLaptop ? 160 : 220} />,
         1:  <Graph width={isMobileSm ? 90 : isMobile ? 120 : isLaptop ? 130 : 170} />,
@@ -29,9 +38,15 @@ const Runner = ({ isClear, isStart }: RunnerProps) => {
         3:  <div data-action="obstacles.pappers" />,
         4:  <Coffee width={isMobileSm ? 90 : isMobile ? 120 : isLaptop ? 130 : 180} />
     };
+
     return (
         <div className={styles.block} ref={root}>
-            <PointsDisplay />
+            <PointsDisplay
+                achievement={achievement}
+                isFail={isFail}
+                isStart={started}
+                isPause={isPause}
+            />
             <div className={classNames(styles.ribbon, !isClear && styles.default)}>
                 <picture>
                     <img src={isMobile ? '/images/ribbon-m.webp' : '/images/ribbon.webp'} alt="" data-selector="game.bg" />
