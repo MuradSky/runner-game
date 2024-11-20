@@ -48,7 +48,6 @@ const usePoints = (isStart: boolean, isPause: boolean, achievement: number, isFa
         };
     }, [isStart, isPause, restart, type]);
 
-
     useEffect(() => {
         const hero = document.querySelector('[data-selector="game.person"]') as HTMLDivElement;
         const addCoin = root.current?.querySelector('[data-selector="coin.add"]') as HTMLDivElement;
@@ -86,7 +85,7 @@ const usePoints = (isStart: boolean, isPause: boolean, achievement: number, isFa
         if (isFail && isIntro) {
             coinAnimate.current?.kill();
             coinAnimate.current = null;
-            coinOutro(chooseHero as string);
+            // coinOutro(chooseHero as string);
         }
     }, [isFail, isIntro]);
 
@@ -104,7 +103,7 @@ const usePoints = (isStart: boolean, isPause: boolean, achievement: number, isFa
             }
 
             return (
-                rect1.left < (rect2.right - 200) &&
+                rect1.left < (rect2.right - 170) &&
                 (rect1.right - 20) > rect2.left &&
                 rect1.top < (rect2.bottom - 200) &&
                 (rect1.bottom - 200) > rect2.top
@@ -121,19 +120,22 @@ const usePoints = (isStart: boolean, isPause: boolean, achievement: number, isFa
                     const objRect = selectors.addCoin?.getBoundingClientRect();
                     const personRect = selectors.hero?.getBoundingClientRect();
                     if (checkCollision(personRect as ClientRect, objRect as ClientRect)) {
-                        coinAnimate.current?.pause();
                         coinOutro(chooseHero as string);
+                        coinAnimate.current?.pause();
                         setRestart(false);
                         addIsPause();
-
+                        gsap.to(selectors.addCoin, {
+                            scale: 0,
+                            delay: .3,
+                        });
                         gsap.to(selectors.addCoin, {
                             x: isMobile ? '-=100' : '-=250',
                             duration: .5,
-                            ease: 'out',
                             onComplete() {
+                                
+                                gsap.set(selectors.addCoin, { delay: 1, x: 0, scale: 1.7, });
                                 setType(type+1);
                                 addWinCoin();
-                                gsap.set(selectors.addCoin, { delay: 1, x: 0 });
                                 if (animate.current) {
                                     animate.current.destroy();
                                 }
@@ -218,7 +220,7 @@ const usePoints = (isStart: boolean, isPause: boolean, achievement: number, isFa
 
     const coinOutro = (key: string) => {
         const jsonData = data[key].outro[type];
-        
+        console.log(jsonData);
         if (animate.current) {
             animate.current.destroy();
         }

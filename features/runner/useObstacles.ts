@@ -43,7 +43,7 @@ const useObstacles = ({
 
             const svg = pappers?.querySelector('svg');
             if (svg) {
-                svg.setAttribute('width', isMobile ? '160px' : isLaptop ? '250px' : '270px');
+                svg.setAttribute('width', isMobile ? '160px' : isLaptop ? '250px' : '240px');
                 svg.setAttribute('height', isMobile ? '110px' : isLaptop ? '150px' : '200px');
             }
             return papper;
@@ -64,17 +64,17 @@ const useObstacles = ({
             const checkCollision = (rect1: ClientRect, rect2: ClientRect) => {
                 if (isMobile) {
                     return (
-                        rect1.left < rect2.right &&
-                        rect1.right > rect2.left &&
-                        rect1.top < rect2.bottom &&
-                        rect1.bottom > rect2.top
+                        rect1.left < rect2?.right &&
+                        rect1.right > rect2?.left &&
+                        rect1.top < rect2?.bottom &&
+                        rect1.bottom > rect2?.top
                     );
                 }
                 return (
-                    rect1.left < (rect2.right - 45) &&
-                   (rect1.right - 50) > rect2.left &&
-                    rect1.top < rect2.bottom &&
-                    rect1.bottom > rect2.top
+                    rect1.left < (rect2?.right - 45) &&
+                   (rect1.right - 50) > rect2?.left &&
+                    rect1.top < rect2?.bottom &&
+                    rect1.bottom > rect2?.top
                 );
             };
 
@@ -85,10 +85,10 @@ const useObstacles = ({
                 onUpdate() {
                     const obj2 = person?.querySelector('g');
                     if (obj && obj2) {
-                        const objRect = obj.getBoundingClientRect();
+                        const objRect = (count === 3 ? obj.querySelector('g') as SVGGElement : obj)?.getBoundingClientRect();
                         const personRect = obj2.getBoundingClientRect();
                         if (!isGamePaused && checkCollision(personRect, objRect) && person || isFinish) {
-                            setIsFails(true);
+                            setIsFails(true);                        
                         }
                     }
                 },

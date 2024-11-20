@@ -78,7 +78,7 @@ const useScene = () => {
         }
     }, {
         scope: root,
-        dependencies: [lottie]
+        dependencies: [lottie, isOpenPreview]
     });
 
 
@@ -179,6 +179,8 @@ const useScene = () => {
         isLoop = true,
         autoplay = false,
     ) => {
+        console.log(data[hero][type]);
+
         if (lottie) {
             const l = lottie.loadAnimation({
                 container: root,

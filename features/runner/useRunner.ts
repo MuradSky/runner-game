@@ -68,9 +68,15 @@ const useRunner = ({ isStart }: Props) => {
     }, [isGamePaused]);
 
     useEffect(() => {
-        if (timeLeft <= 0 && !isGamePaused) {
+        if ((isMobile ?  timeLeft <= 3 : timeLeft <= 2) && !isGamePaused) {
             setIsFinish(true);
-            if (!isGamePaused) addIsFinish();
+            if (!isGamePaused) {
+                const tm = setTimeout(() => {
+                    addIsFinish();
+                }, 2000);
+            
+                return () => clearTimeout(tm);
+            }
             return;
         }
         if (isGamePaused) return;
@@ -81,14 +87,14 @@ const useRunner = ({ isStart }: Props) => {
     }, [timeLeft, isGamePaused]);
 
     useEffect(() => {
-        if (isMobile ? (timeLeft === 21) : (timeLeft === 22) && !isGamePaused) {
+        if (isMobile ? (timeLeft === 22) : (timeLeft === 22) && !isGamePaused) {
             setAchievement(1);
         }
         if (isMobile ? (timeLeft === 11) : timeLeft === 12 && !isGamePaused) {
             setAchievement(2);
         }
 
-        if (isMobile ? (timeLeft === 1) : timeLeft === 2 && !isGamePaused) {
+        if (isMobile ? (timeLeft === 3) : timeLeft === 2 && !isGamePaused) {
             setAchievement(3);
         }
     }, [timeLeft, isGamePaused]);
