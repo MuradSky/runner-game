@@ -1,12 +1,12 @@
 import { Howl, Howler } from 'howler';
 import { useEffect, useRef } from 'react';
 
-const useHowler = (src: string, volume = 0.4) => {
+const useHowler = (src: string, loop=true, volume = 0.4) => {
     const sound = useRef<null | Howl>(null);
     useEffect(() => {
         sound.current = new Howl({
             src: [src],
-            loop: true,
+            loop,
             preload: true,
         });
         Howler.volume(volume);

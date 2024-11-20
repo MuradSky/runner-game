@@ -141,3 +141,12 @@ input {
         height: initial;
     }
 }
+
+
+[data-selector="onboard"] {
+    &.swiper-slide {
+        &:not(.swiper-slide-visible) {
+            opacity: 0;
+        }
+    }
+}

@@ -29,13 +29,15 @@ const Hero = () => {
             <Swiper
                 allowTouchMove={false} 
                 modules={[EffectFade]}
+                spaceBetween={32}
                 effect="fade"
                 speed={1000}
                 fadeEffect={{ crossFade: true }}
                 onSwiper={(swiper: SwiperClass) => setSwiper(swiper)}
                 className={styles.view}
+                
             >
-                <SwiperSlide className={styles.item}>
+                <SwiperSlide className={styles.item} data-selector="onboard">
                     <div className={classNames(styles.content, isPreview && styles.static)} ref={root}>
                         <h1 data-selector="content.title">
                             пОМОГИ герою <br /> внедрить геймификацию <br /> и решить свои проблемы
@@ -48,20 +50,22 @@ const Hero = () => {
                     </div>
 
                     <div className={styles.main_bg}>
+                        <picture className={styles.user}>
+                            <source media="(max-width: 768px)" srcSet="/images/user-m.webp" />
+                            <img src="/images/user.webp" alt="" />
+                        </picture>
                         <picture>
-                            <source media="(max-width: 768px)" srcSet="/images/main-m.png" />
-                            <source media="(max-width: 1024px) and (min-height: 1024px)" srcSet="/images/main-m.png" />
                             <img
-                                src="/images/main-1.webp"
+                                src="/images/main.webp"
                                 alt=''
                             />
                         </picture>
                     </div>
                 </SwiperSlide>
-                <SwiperSlide className={styles.item}>
+                <SwiperSlide className={styles.item} data-selector="onboard">
                     <Scene />
                 </SwiperSlide>
-                <SwiperSlide className={styles.item}>
+                <SwiperSlide className={styles.item} data-selector="onboard">
                     <Game />
                 </SwiperSlide>
             </Swiper>

@@ -13,31 +13,46 @@ const useHeader = () => {
         isOpenResult,
         isGameOver,
         addReset,
+        isGameFail,
     } = useStore(state => state);
     const [playFisrt, pauseFirst] = useHowler('/sound/first.mp3');
     const [playGame, pauseGame] = useHowler('/sound/game.mp3');
-    const [playFinish, pauseFinish] = useHowler('/sound/finish.mp3');
+    const [playFinish, pauseFinish] = useHowler('/sound/finish.mp3', false);
+    const [playFail, pauseFail] = useHowler('/sound/fail.mp3', false);
 
     const root = useRef<HTMLDivElement | null>(null);
     const [toggle, setToggle] = useState(false);
     const [isFinish, setIsFinish] = useState(false);
-
-
     
     useEffect(() => {
-        if (!toggle && chooseHero && isFinish) {
+        let timeout: NodeJS.Timeout | null = null;
+        if (!toggle && chooseHero && isGameFail) {
+            pauseGame();
+            timeout = setTimeout(() => {
+                playFail();
+            }, 1000);
+        }
+
+        return () => {
+            clearTimeout(timeout as NodeJS.Timeout);
+        };
+    }, [isGameFail]);
+
+    useEffect(() => {
+        if (!toggle && chooseHero && isFinish && !isGameFail) {
             pauseGame();
             playFinish();
         }
-        if (!toggle && chooseHero && !isFinish) {
+
+        if (!toggle && chooseHero && !isFinish && !isGameFail) {
             pauseFirst();
             playGame();
         }
-    }, [chooseHero, isFinish, toggle]);
+    }, [chooseHero, isFinish, toggle, isGameFail]);
 
     useEffect(() => {
        
-    }, [toggle, isFinish]);
+    }, [toggle, isFinish, isGameFail]);
 
     useEffect(() => {
         let load = false;
@@ -184,6 +199,15 @@ const useHeader = () => {
 
     const onToggle = () => {
         setToggle(!toggle);
+
+        if (isGameFail) {
+            if (!toggle) {
+                pauseFail();
+            } else {
+                playFail();
+            }
+            return;
+        }
 
         if (isFinish) {
             if (!toggle) {

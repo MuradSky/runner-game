@@ -16,12 +16,12 @@ const useRunner = ({ isStart }: Props) => {
     const root = useRef<HTMLDivElement | null>(null);
     const [timeLeft, setTimeLeft] = useState(30); 
     const [isFail, setIsFails] = useState(false);
-    const [isFinish, setIsFinish] = useState(false);
+    // const [isFinish, setIsFinish] = useState(false);
     const [started, setStarted] = useState(false);
     const [achievement, setAchievement] = useState(0); 
     const roundTl = useRef<NodeJS.Timeout | null>(null);
     const { obstacles, currentObstacle } = useObstacles({
-        started, root, setIsFails, isFinish,
+        started, root, setIsFails, isFinish: isGameFinish,
     });
     const { loop1 } = useLoop({ started, root });
     const { animation, lottie, loadAnimate, personTl, personTlRev, } = usePerson({
@@ -69,11 +69,10 @@ const useRunner = ({ isStart }: Props) => {
 
     useEffect(() => {
         if ((isMobile ?  timeLeft <= 3 : timeLeft <= 2) && !isGamePaused) {
-            setIsFinish(true);
             if (!isGamePaused) {
                 const tm = setTimeout(() => {
                     addIsFinish();
-                }, isMobile ? 4000 : 2000);
+                }, 4000);
             
                 return () => clearTimeout(tm);
             }
