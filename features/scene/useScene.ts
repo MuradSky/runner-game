@@ -49,6 +49,7 @@ const useScene = () => {
         ann: null,
     });
     const {
+        chooseHero,
         addPerson,
         isBack,
         addOpenPreview,
@@ -64,12 +65,21 @@ const useScene = () => {
     }, [isOpenResult]);
 
     useEffect(() => {
+        if (chooseHero) {
+            const timeOut = setTimeout(() => {
+                Object.values(animate).forEach(item => item?.destroy());
+            }, 2000);
+            return () => clearTimeout(timeOut);
+        }
+    }, [chooseHero]);
+
+    useEffect(() => {
         const lottie = require('lottie-web');
         setLottie(lottie);
     }, []);
 
     useGSAP(() => {
-        if (lottie && root.current) {
+        if (lottie && root.current && isOpenPreview) {
             ['maks', 'rom', 'ann'].forEach(item => {
                 const person = (root.current as HTMLDivElement).querySelector(`[data-person="${item}"]`);
                 const anim = (person as HTMLDivElement).querySelector('[data-action="person.anim"]') as HTMLDivElement;

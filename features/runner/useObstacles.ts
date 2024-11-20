@@ -82,6 +82,7 @@ const useObstacles = ({
                 x: -(window.innerWidth + (500)),
                 duration: window.innerWidth < 420 ? 4 : isMobile ? 4 : 5.2,
                 ease: 'linear',
+                delay: isMobile ? 1.8 : 0,
                 onUpdate() {
                     const obj2 = person?.querySelector('g');
                     if (obj && obj2) {

@@ -73,7 +73,7 @@ const useRunner = ({ isStart }: Props) => {
             if (!isGamePaused) {
                 const tm = setTimeout(() => {
                     addIsFinish();
-                }, 2000);
+                }, isMobile ? 4000 : 2000);
             
                 return () => clearTimeout(tm);
             }

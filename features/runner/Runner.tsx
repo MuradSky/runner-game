@@ -8,6 +8,7 @@ import Button from 'components/button';
 
 import Jump from 'assets/svg/jump.svg';
 import PC from 'assets/obj/pc-yt.svg';
+import Pappers from 'assets/obj/pappers.svg';
 import Graph from 'assets/obj/graph.svg';
 import User from 'assets/obj/user.svg';
 import Coffee from 'assets/obj/coffee.svg';
@@ -35,7 +36,7 @@ const Runner = ({ isClear, isStart }: RunnerProps) => {
         0:  <PC width={isMobileSm  ? 100  : isMobile ?  130 : isLaptop ? 160 : 220} />,
         1:  <Graph width={isMobileSm ? 90 : isMobile ? 120 : isLaptop ? 130 : 170} />,
         2:  <User width={isMobileSm ? 120 : isMobile ? 140 : isLaptop ? 160 :  220}  />,
-        3:  <div data-action="obstacles.pappers" />,
+        3:  <Pappers width={isMobile ? 150 : 220} />,
         4:  <Coffee width={isMobileSm ? 90 : isMobile ? 120 : isLaptop ? 130 : 180} />
     };
 

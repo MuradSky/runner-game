@@ -127,7 +127,7 @@ const usePerson = ({
                 if (person) {
                     loadAnimate('jump');
                     gsap.to(person, {
-                        x: isMobile ? 250 : 280,
+                        x: isMobile ? 220 : 280,
                         duration: .5,
                         delay: .3,
                         onStart() {
