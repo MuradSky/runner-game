@@ -1,0 +1,18 @@
+.block {
+    color: #fff;
+    text-align: center;
+    font-family: 'PT_Root_UI', sans-serif;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 135%;
+    letter-spacing: -0.18px;
+
+    @media (max-width: 1366px) {
+        font-size: 16px;
+    }
+
+    @media (max-width: 768px) {
+        font-size: 14px;
+    }
+}
