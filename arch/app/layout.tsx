@@ -4,7 +4,7 @@ import '@/styles/root.scss';
 import Header from 'features/header';
 
 export const metadata: Metadata = {
-    title: 'Цифровой инхаус подрядчик для корпорация',
+    title: 'Цифровой инхаус подрядчик для корпораций',
     description: 'Разрабатываем цифровые решения. Увеличиваем их показатели при помощи геймификации',
     appleWebApp: {
         capable: true,
