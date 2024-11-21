@@ -10,6 +10,7 @@ import useStore from 'store';
 interface Props {
     started: boolean;
     isFinish: boolean;
+    isClear: boolean;
     root: RefObject<HTMLDivElement>;
     setIsFails: (v: boolean) => void;
 }
@@ -18,7 +19,8 @@ const useObstacles = ({
     started,
     root,
     isFinish,
-    setIsFails
+    setIsFails,
+    isClear,
 }: Props) => {
     const { isGamePaused } = useStore(state => state);
     const { isMobile, isLaptop } = useScreenSize();
@@ -51,7 +53,7 @@ const useObstacles = ({
 
         let animate: AnimationItem | null = null;
 
-        if (isFinish) {
+        if (isFinish || isClear) {
             obstacles.current.pause();
             const timer = setTimeout(() => {
                 if (animate) animate.destroy();
@@ -80,7 +82,7 @@ const useObstacles = ({
 
             obstacles.current.to('[data-action="obstacles.item"]', {
                 x: -(window.innerWidth + (500)),
-                duration: window.innerWidth < 420 ? 4 : isMobile ? 4 : 5.2,
+                duration: window.innerWidth < 480 ? 4 : isMobile ? 4 : 5.2,
                 ease: 'linear',
                 delay: isMobile ? 2 : 0,
                 onUpdate() {
@@ -111,7 +113,7 @@ const useObstacles = ({
         };
     }, {
         scope: root,
-        dependencies: [started, isFinish],
+        dependencies: [started, isFinish, isClear],
     });
 
     return {

@@ -7,7 +7,7 @@ import Button from 'components/button';
 
 import { classNames } from 'utils';
 
-const Result = () => {
+const Result = ({ query }: { query: string | null }) => {
     const {
         root,
         hero,
@@ -38,7 +38,7 @@ const Result = () => {
                             <span>Твоя награда:</span>
                             <p>Консультация по внедрению геймификации для роста метрик</p>
                         </div>
-                        <a href="https://utopiait.ru/" target="_blank" rel="noreferrer">
+                        <a href={'https://www.utopiait.ru/?'+(query || '')} target="_blank" rel="noreferrer">
                             <Button cssClass={styles.regist}>
                                 Записаться на консультацию <span>за 0₽</span>
                             </Button> 

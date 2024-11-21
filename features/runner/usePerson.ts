@@ -151,7 +151,7 @@ const usePerson = ({
                                 duration: isMobile ? 2 : 1,
                                 easy: 'linear'
                             });
-                            console.log(isFailLocal.current);
+                            (isFailLocal.current);
                             isJump = false;
                             if (!isFailLocal.current || !animation.current?.isPaused) {
                                 loadAnimate('run');
@@ -182,7 +182,6 @@ const usePerson = ({
     });
 
     const loadAnimate = (key: string) => {
-        console.log(isFail);
 
         const person = root.current?.querySelector<HTMLDivElement>('[data-selector="game.person"]');
         if (animation.current) {

@@ -21,7 +21,11 @@ const useRunner = ({ isStart }: Props) => {
     const [achievement, setAchievement] = useState(0); 
     const roundTl = useRef<NodeJS.Timeout | null>(null);
     const { obstacles, currentObstacle } = useObstacles({
-        started, root, setIsFails, isFinish: isGameFinish,
+        started,
+        root,
+        setIsFails,
+        isFinish: isGameFinish,
+        isClear: achievement === 3,
     });
     const { loop1 } = useLoop({ started, root });
     const { animation, lottie, loadAnimate, personTl, personTlRev, } = usePerson({
@@ -73,7 +77,6 @@ const useRunner = ({ isStart }: Props) => {
                 const tm = setTimeout(() => {
                     addIsFinish();
                 }, 4000);
-            
                 return () => clearTimeout(tm);
             }
             return;

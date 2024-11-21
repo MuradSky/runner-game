@@ -189,7 +189,6 @@ const useScene = () => {
         isLoop = true,
         autoplay = false,
     ) => {
-        console.log(data[hero][type]);
 
         if (lottie) {
             const l = lottie.loadAnimation({

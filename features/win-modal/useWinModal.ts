@@ -32,7 +32,7 @@ const useWinModal = () => {
         let animate: AnimationItem | null = null;
         const anim = root.current?.querySelector('[data-action="coin.anim"]') as HTMLDivElement;
 
-        console.log(current && current[scene || 0].icon, current, scene);
+        (current && current[scene || 0].icon, current, scene);
 
         if (current) {
             animate = lottie.loadAnimation({

@@ -220,7 +220,6 @@ const usePoints = (isStart: boolean, isPause: boolean, achievement: number, isFa
 
     const coinOutro = (key: string) => {
         const jsonData = data[key].outro[type];
-        console.log(jsonData);
         if (animate.current) {
             animate.current.destroy();
         }

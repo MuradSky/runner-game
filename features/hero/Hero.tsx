@@ -1,5 +1,5 @@
 'use client';
-import { memo } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import { Swiper, SwiperSlide, SwiperClass } from 'swiper/react';
 import { EffectFade } from 'swiper/modules';
 
@@ -15,6 +15,7 @@ import Result from 'features/result';
 import styles from './Hero.module.scss';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
+import { useSearchParams } from 'next/navigation';
 
 const Hero = () => {
     const {
@@ -23,6 +24,24 @@ const Hero = () => {
         root,
         isPreview
     } = useHero();
+    const query = useRef<null | string>(null);
+    const searchParams = useSearchParams();
+    const urlSearchParams = new URLSearchParams(searchParams);
+    const searchUrl = urlSearchParams.toString();
+
+    useEffect(() => {
+        if (searchUrl) query.current = searchUrl;
+    }, []);
+
+    useEffect(() => {
+        clearSearchParams();
+    }, []);
+
+    const clearSearchParams = () => {
+        const url = new URL(window.location.href);
+        url.search = ''; // Clear all search parameters
+        window.history.replaceState(null, '', url.toString()); // Update the URL
+    };
 
     return (
         <section className={styles.block}>
@@ -71,7 +90,7 @@ const Hero = () => {
             </Swiper>
 
             <Winmodal />
-            <Result />
+            <Result query={query.current} />
         </section>
     );
 };
