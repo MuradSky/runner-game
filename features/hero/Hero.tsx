@@ -1,21 +1,29 @@
 'use client';
 import { memo, useEffect, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { Swiper, SwiperSlide, SwiperClass } from 'swiper/react';
 import { EffectFade } from 'swiper/modules';
 
 import { classNames } from 'utils';
 import useHero from './useHero';
-import Scene from 'features/scene';
-import Game from 'features/game';
 import Button from 'components/button';
 import Text from 'components/text';
+
 import Winmodal from 'features/win-modal';
 import Result from 'features/result';
 
 import styles from './Hero.module.scss';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
-import { useSearchParams } from 'next/navigation';
+
+const Scene = dynamic(() => import('features/scene'), {
+    ssr: false,
+});
+
+const Game = dynamic(() => import('features/game'), {
+    ssr: false,
+});
 
 const Hero = () => {
     const {
