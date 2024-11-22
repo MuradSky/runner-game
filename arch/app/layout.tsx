@@ -1,7 +1,11 @@
 import { ReactNode } from 'react';
+import dynamic from 'next/dynamic';
 import type { Metadata } from 'next';
 import '@/styles/root.scss';
-import Header from 'features/header';
+
+const Header = dynamic(() => import('features/header'), {
+    ssr: false,
+});
 
 export const metadata: Metadata = {
     title: 'Цифровой инхаус подрядчик для корпораций',
