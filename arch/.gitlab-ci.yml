@@ -1,7 +1,0 @@
-deploy-job:      # This job runs in the deploy stage. vvs
-  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  environment: production
-  script:
-    - echo "Deploying application..."
-    - echo "Application successfully deployed."
-    - rsync -av --no-t --no-perms --no-owner --no-group --exclude ".git*" $CI_PROJECT_DIR/ /var/www/html

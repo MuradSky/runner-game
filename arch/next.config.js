@@ -9,6 +9,7 @@ module.exports = {
             test: /\.svg$/i,
             use: ['@svgr/webpack'],
         });
+        // config.output.chunkFilename = '[id].[contenthash].js';
         return config;
     },
 };
